@@ -5,8 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI' ] = "sqlite:///site.db"
-
+app.secret_key = "my_secret_key"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 
 #users table 
@@ -15,7 +15,7 @@ class AdventureUser(db.Model):
 
     usr_ref_id = db.Column(db.Integer, primary_key=True)
     usrname = db.Column(db.String(111), nullable=False)
-    role = db.Column(db.String(20), default="user")
+    rolee = db.Column(db.String(20), default="user")
     usr_mail = db.Column(db.String(160), unique=True, nullable=False)
     phone_no = db.Column(db.String(25), unique=True)
     gender = db.Column(db.String(20))       #it's optional
@@ -123,11 +123,7 @@ def register():
         role = request.form["role"]     # identify user or admine
         hashed_password = generate_password_hash(password)
 
-        adv_users = AdventureUser(usrname=name ,usr_mail=email, county=country, phone_no=ph_number,pasword=hashed_password)
-
-        if role == "admin":
-            return "Admin cannot do registration"
-
+        adv_users = AdventureUser(usrname=name ,usr_mail=email, county=country, phone_no=ph_number,rolee=role,pasword=hashed_password)
         regster_usr = AdventureUser.query.filter_by(usr_mail=email).first()
         if regster_usr:
             return "Email already registered"
@@ -151,10 +147,76 @@ def login():
         if not check_password_hash(regster_usr.pasword, password):
             return "Invalid Password"
         
+        if regster_usr.rolee == "Admin":
+            session['user_id'] = regster_usr.usr_ref_id
+            return redirect(url_for("admin_dashboard"))
+        elif regster_usr.rolee == "staff":
+            session['user_id'] = regster_usr.usr_ref_id
+            if not regster_usr.verfied:
+                return "Your account is not verified . Please wait till approved."
+            return redirect(url_for("staff_dashboard"))
+
+
+        elif regster_usr.role_of_the_user == "User":
+            session['user_id'] = regster_usr.id
+            return redirect(url_for("user_dashboard"))
+
+
         return redirect(url_for("user_dashboard"))
     return render_template("login.html")
 
-        
+@app.route("/admin_dashboard")
+def admin_dashboard():
+    return render_template("admin_dashboard.html")
+
+
+
+@app.route('/staff_dashboard')
+def staff_dashboard():
+    return render_template("staff_dashboard.html")
+
+
+@app.route("/add_treks" , methods=["GET" , "POST"])
+def add_routes():
+    stafs = Adventure_Staff.query.all()
+
+    if request.method == "POST":
+        rout_name = request.form.get("rout_name")
+        destination = request.form.get("destination")
+        rout_type = request.form.get("rout_type")
+        difficulty_level = request.form.get("difficulty_level")
+        total_days_are = request.form.get("total_days_are")
+        rout_price = request.form.get("rout_price")
+        capcity = request.form.get("capcity")
+        remening_spots = request.form.get("remening_spots")
+        journey_date = request.form.get("journey_date")
+        strt_loction = request.form.get("strt_loction")
+        end_loction = request.form.get("end_loction")
+        distnce = request.form.get("distnce")
+        max_altitdu = request.form.get("max_altitdu")
+
+        new_route = Adventure_route(
+            rout_name=rout_name,
+            destination=destination,
+            rout_type=rout_type,
+            difficulty_level=difficulty_level,
+            total_days_are=total_days_are,
+            rout_price=rout_price,
+            capcity=capcity,
+            remening_spots=remening_spots,
+            journey_date=journey_date,
+            strt_loction=strt_loction,
+            end_loction=end_loction,
+            distnce=distnce,
+            max_altitdu=max_altitdu
+        )
+
+        db.session.add(new_route)
+        db.session.commit()
+        return redirect(url_for("admin_dashboard"))
+    return render_template("add_treks.html", staffs=stafs)
+
+
 @app.route("/logout")
 def logout():
     session.pop("user_id", None)
@@ -173,7 +235,7 @@ if __name__ == "__main__":
                 usrname="Admin",
                 usr_mail="admin@Adventure.com",
                 pasword= generate_password_hash("admin123"),
-                role="admin",
+                rolee="admin",
                 county ="india",
                 state_of_usr="Bihar",
                 city_of_usr="Patna",

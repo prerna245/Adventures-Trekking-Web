@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +16,7 @@
         body{
             margin: 0;
             padding: 0;
-            background-image: url("../17221627_rm422-047.jpg");
+            background-image: url("17221627_rm422-047.jpg");
             background-size: cover;      
             background-position: center;
         }
@@ -85,26 +90,32 @@
             <form method="post">
                 <div class="fom-iner-content">
                     <label>First name</h2></label>
-                    <input type="text" name="name" required>
+                    <input type="text" name="name" placeholder="Enter your first name"required>
                 </div>
                 <div class="fom-iner-content">
                     <label>Last name</label>
-                    <input type="text" name="name" required>
+                    <input type="text" name="name" placeholder="Enter your last name" required>
                 </div>
                 <div class="fom-iner-content">
                     <label for="email">Email Address</label>
-                    <input type="email" name="email" required>
+                    <input type="email" name="email" placeholder="Enter your email id" required>
                 </div>
                 <div class="fom-iner-content">
                     <label for="password">Enter Password</label>
-                    <input type="password" name="password" required>
+                    <input type="password" name="password"placeholder="Enter your password" required>
                 </div>
+                <select name="role" required>
+                    <option value="">Select Role</option>
+                    <option value="user">User</option>
+                    <option value="staff">staff</option>
+                </select>
                 <button type="submit" class="log-butn">Sign In</button>
             </form>
             <div class="reg-butn">
                 <span>Are you already registered ? Nice got to   </span>
                 <a href="login.html">Login</a>
             </div>
+            <a href="index.html" >Back To Home</a>
             <div class="web-info">
                 Our site need account approval before access. <br>Thank You!
             </div>
@@ -112,3 +123,6 @@
     </div>
 </body>
 </html>
+
+
+{% endblock %}

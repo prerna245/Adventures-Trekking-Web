@@ -41,6 +41,14 @@
         <a href="a">Services</a>
         <a href="a">Contact</a>
     </div>
+        {% if session.get('user_id') %} 
+            <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login')}}">Login</a>
+            <a href="{{ url_for('register')}}" >Register</a>
+        {% endif %}
+        {% block content %}
+        {% endblock %}
     <div class="footer">
         <p> 2026 Adventrus Trekking Website</p>
     </div>

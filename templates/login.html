@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +16,7 @@
         body{
             margin: 0;
             padding: 0;
-            background-image: url("../17221627_rm422-047.jpg");
+            background-image: url("17221627_rm422-047.jpg");
             background-size: cover;      
             background-position: center;
         }
@@ -84,11 +89,11 @@
             <form method="post">
                 <div class="fom-iner-content">
                     <label for="email">Email Address</label>
-                    <input type="email" name="email" required>
+                    <input type="email" name="email" placeholder="Enter your email id"  required>
                 </div>
                 <div class="fom-iner-content">
                     <label for="password">Enter Password</label>
-                    <input type="password" name="password" required>
+                    <input type="password" name="password" placeholder="Enter your password"  required>
                 </div>
                 <button type="submit" class="log-butn">Sign In</button>
             </form>
@@ -103,3 +108,6 @@
     </div>
 </body>
 </html>
+
+
+{% endblock %}
