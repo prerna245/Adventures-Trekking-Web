@@ -175,6 +175,13 @@ def admin_dashboard():
 def staff_dashboard():
     return render_template("staff_dashboard.html")
 
+@app.route('/approv_stafs/<int:staf_ref_id>')
+def verrify_stafs(staf_ref_id):
+    stafs =AdventureUser.query.get_or_404(staf_ref_id)
+    stafs.verify=True
+    db.session.commit()
+    return redirect('/admin')
+
 
 @app.route("/add_treks" , methods=["GET" , "POST"])
 def add_routes():
@@ -215,6 +222,11 @@ def add_routes():
         db.session.commit()
         return redirect(url_for("admin_dashboard"))
     return render_template("add_treks.html", staffs=stafs)
+
+@app.route('/manage_staffs')
+def mange_stafs():
+    stafs=AdventureUser.query.filter_by(rolee="stafs").all()
+    return render_template('add_treaks.html', stafs=stafs)
 
 
 @app.route("/logout")
