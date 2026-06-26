@@ -11,19 +11,19 @@
     <title>Register Page</title>
     <style>
         .fist-box{
-            margin-top: 60px;
+            margin-top: 40px;
         }
         body{
             margin: 0;
             padding: 0;
-            background-image: url("/static/image(7).jpg");
+            background-image: url("/static/image(4).jpg");
             background-size: cover;      
             background-position: center;
         }
 
         .log-form-box {
             width: 400px;
-            height: 550px;
+            height: 520px;
             border: 2px solid black;
             border-radius: 20px;
             margin: 20px auto;
@@ -34,15 +34,16 @@
         .log {
             text-align: center;
             text-decoration: double;
-            margin-bottom: 25px;
+            margin-bottom: 0px;
+            margin-top: 0px;
         }
 
         .fom-iner-content{
-            margin-bottom: 20px;
+            margin-bottom: 5px;
         }
 
         .fom-iner-content label {
-            font-size: 18px;
+            font-size: 14px;
             display: block;
             text-align: left;
             margin-top: 10px;
@@ -50,12 +51,21 @@
 
         .fom-iner-content input {
             width: 350px;
-            padding: 12px;
+            padding: 10px;
             border: 2px solid black;
             border-radius: 5px;
             background-color: #c9dcd1;
-            font-size: 16px;
+            font-size: 13px;
 
+        }
+        .optn select{
+            height: 35px;
+            width: 170px;
+            border: 2px solid black;
+            background-color: #c9dcd1;
+            text-align: center;
+            font-size: medium;
+            margin-top: 15px;
         }
 
         .log-butn {
@@ -72,14 +82,8 @@
         .reg-butn {
             margin-top: 22px;
             text-align: center;
-            font-size: 20px;
+            font-size: 15px;
         }
-        .web-info{
-            text-align: center;
-            font-size: 14px;
-            margin-top: 20px;
-        }
-        
     </style>
 
 </head>
@@ -89,36 +93,39 @@
             <h2 class="log">Register Form</h2>
             <form method="post">
                 <div class="fom-iner-content">
-                    <label>First name</h2></label>
+                    <label>Enter Your Name</h2></label>
                     <input type="text" name="name" placeholder="Enter your first name"required>
                 </div>
                 <div class="fom-iner-content">
-                    <label>Last name</label>
-                    <input type="text" name="name" placeholder="Enter your last name" required>
+                    <label>Phone number</label>
+                    <input type="text" name="ph_number" minlength="10" maxlength="10" placeholder="Enter phone number" required>
                 </div>
                 <div class="fom-iner-content">
                     <label for="email">Email Address</label>
                     <input type="email" name="email" placeholder="Enter your email id" required>
                 </div>
                 <div class="fom-iner-content">
+                    <label>Country</label>
+                    <input type="text" name="country" placeholder="Enter your country" required>
+                </div>
+                <div class="fom-iner-content">
                     <label for="password">Enter Password</label>
                     <input type="password" name="password"placeholder="Enter your password" required>
                 </div>
-                <select name="role" required>
-                    <option value="">Select Role</option>
-                    <option value="user">User</option>
-                    <option value="staff">staff</option>
-                </select>
+                <div class="optn">
+                    <select name="role" required>
+                        <option value="">Select Role</option>
+                        <option value="user">User</option>
+                        <option value="staff">staff</option>
+                    </select>
+                </div>
                 <button type="submit" class="log-butn">Sign In</button>
             </form>
             <div class="reg-butn">
                 <span>Are you already registered ? Nice got to   </span>
-                <a href="login.html">Login</a>
+                <a href="{{ url_for('login') }}">Login</a>
             </div>
-            <a href="index.html" >Back To Home</a>
-            <div class="web-info">
-                Our site need account approval before access. <br>Thank You!
-            </div>
+            <a href="{{ url_for('index') }}" >Back To Home</a>
         </div>
     </div>
 </body>

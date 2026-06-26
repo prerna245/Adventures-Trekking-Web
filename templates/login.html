@@ -11,34 +11,35 @@
     <title>Login Page</title>
     <style>
         .fist-box{
-            margin-top: 80px;
+            margin-top: 40px;
         }
         body{
             margin: 0;
             padding: 0;
-            background-image: url("17221627_rm422-047.jpg");
+            background-image: url("/static/image(4).jpg");
             background-size: cover;      
             background-position: center;
         }
 
         .log-form-box {
             width: 400px;
-            height: 400px;
+            height: 320px;
             border: 2px solid black;
             border-radius: 20px;
             margin: 20px auto;
             padding: 15px;
-            background-color: #98c0ac;;
+            background-color: rgb(155, 138, 138);
         }
 
         .log {
             text-align: center;
             text-decoration: double;
             margin-bottom: 25px;
+            margin-top: 5px;
         }
 
         .fom-iner-content{
-            margin-bottom: 20px;
+            margin-bottom: 5px;
         }
 
         .fom-iner-content label {
@@ -50,14 +51,22 @@
 
         .fom-iner-content input {
             width: 350px;
-            padding: 12px;
+            padding: 10px;
             border: 2px solid black;
             border-radius: 5px;
             background-color: #c9dcd1;
-            font-size: 16px;
+            font-size: 13px;
 
         }
-
+        .optn select{
+            height: 35px;
+            width: 170px;
+            border: 2px solid black;
+            background-color: #c9dcd1;
+            text-align: center;
+            font-size: medium;
+            margin-top: 15px;
+        }
         .log-butn {
             width: 100%;
             padding: 10px;
@@ -72,15 +81,9 @@
         .reg-butn {
             margin-top: 22px;
             text-align: center;
-            font-size: 20px;
-        }
-        .web-info{
-            text-align: center;
-            font-size: 14px;
-            margin-top: 20px;
+            font-size: 15px;
         }
     </style>
-
 </head>
 <body>
     <div class="fist-box">
@@ -95,14 +98,18 @@
                     <label for="password">Enter Password</label>
                     <input type="password" name="password" placeholder="Enter your password"  required>
                 </div>
+                <div class="optn">
+                    <select name = "Role">
+                        <option value="">Select Role</option>
+                        <option value="user">User</option>
+                        <option value="Staff">Staff</option>
+                    </select>
+                </div>
                 <button type="submit" class="log-butn">Sign In</button>
             </form>
             <div class="reg-butn">
                 <span>Do not have an account? Click  </span>
                 <a href="register.html">Register</a>
-            </div>
-            <div class="web-info">
-                Our site need account approval before access. <br>Thank You!
             </div>
         </div>
     </div>
