@@ -29,3 +29,45 @@
 {% endfor %}
 
 {% endblock %}
+
+
+
+@app.route("/assign-staff/<int:id>", methods=["POST"])
+def assign_staff(id):
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session.get("role") != "admin":
+        return redirect("/login")
+
+    adventure = Adventure.query.filter_by(id=id).first()
+
+    if adventure is None:
+        return redirect("/manage-adventures")
+
+    if adventure.status == "Close":
+        flash("Staff cannot be assigned because this adventure is closed.", "danger")
+        return redirect("/manage-adventures")
+
+    staff_id = request.form["staff_id"]
+
+    # Check if the staff is already assigned to another trek
+    # whose dates overlap with this trek
+    existing = Adventure.query.filter(
+        Adventure.staff_id == staff_id,
+        Adventure.id != adventure.id,
+        Adventure.start_date <= adventure.end_date,
+        Adventure.end_date >= adventure.start_date
+    ).first()
+
+    if existing:
+        flash("This staff member is already assigned to another trek on these dates.", "danger")
+        return redirect("/manage-adventures")
+
+    # Assign staff
+    adventure.staff_id = staff_id
+    db.session.commit()
+
+    flash("Staff assigned successfully.", "success")
+    return redirect("/manage-adventures")

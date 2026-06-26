@@ -29,6 +29,7 @@ class AdventureUser(db.Model):
     emerg_contct_no =db.Column(db.Integer)
     is_it_actve = db.Column(db.Boolean, default=True)
     adventure_began = db.Column(db.DateTime, default=datetime.utcnow)
+    verfy=db.Column(db.Boolean, default=False)
 
 # relationship
     bokings_fr_usr = db.relationship('AdventureBooking',backref='user',lazy=True)
@@ -171,7 +172,7 @@ def login():
 
         # staf will login
         elif regster_usr.rolee == "staff":
-            if regster_usr.is_it_actve ==False:
+            if regster_usr.verfy ==False:
                 return "Your account isn't verified yet! wait till approve."
             session['user_id'] = regster_usr.usr_ref_id
             return redirect(url_for("staff_dashboard"))
