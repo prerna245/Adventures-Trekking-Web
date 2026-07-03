@@ -1,14 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
     <style>
         .fist-box{
             margin-top: 40px;
@@ -16,19 +8,26 @@
         body{
             margin: 0;
             padding: 0;
-            background-image: url("/static/image(4).jpg");
-            background-size: cover;      
-            background-position: center;
         }
-
+        .fist-box{
+            min-height:81vh;
+            display:flex;
+            justify-content:center;
+            align-items:flex-start;
+            background-image:url("/static/image(4).jpg");
+            background-size:cover;
+            background-position:center;
+            margin: 0;
+            padding: 0;
+        }
         .log-form-box {
             width: 400px;
             height: 320px;
-            border: 2px solid black;
+            border: 2px solid rgb(9, 63, 71);
             border-radius: 20px;
             margin: 20px auto;
             padding: 15px;
-            background-color: rgb(155, 138, 138);
+            background-color: rgb(117, 165, 173);
         }
 
         .log {
@@ -56,21 +55,12 @@
             border-radius: 5px;
             background-color: #c9dcd1;
             font-size: 13px;
-
         }
-        .optn select{
-            height: 35px;
-            width: 170px;
-            border: 2px solid black;
-            background-color: #c9dcd1;
-            text-align: center;
-            font-size: medium;
-            margin-top: 15px;
-        }
+    
         .log-butn {
-            width: 100%;
+            width: 90%;
             padding: 10px;
-            margin-top: 15px;
+            margin-top: 25px;
             background-color: #2c3e50;
             color: #fff;
             border: none;
@@ -84,8 +74,7 @@
             font-size: 15px;
         }
     </style>
-</head>
-<body>
+
     <div class="fist-box">
         <div class="log-form-box">
             <h2 class="log">Login Form</h2>
@@ -98,23 +87,16 @@
                     <label for="password">Enter Password</label>
                     <input type="password" name="password" placeholder="Enter your password"  required>
                 </div>
-                <div class="optn">
-                    <select name = "Role">
-                        <option value="">Select Role</option>
-                        <option value="user">User</option>
-                        <option value="Staff">Staff</option>
-                    </select>
-                </div>
                 <button type="submit" class="log-butn">Sign In</button>
             </form>
             <div class="reg-butn">
-                <span>Do not have an account? Click  </span>
-                <a href="register.html">Register</a>
+                <span>Do not have an account? Click </span>
+                <a href="{{ ('register') }}">Register</a>
+                <p>Our website need verification before enter</p>
             </div>
         </div>
     </div>
-</body>
-</html>
+
 
 
 {% endblock %}

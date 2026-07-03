@@ -3,278 +3,334 @@
 
 <style>
 
-    *{
-        margin:0;
-        padding:0;
-        box-sizing:border-box;
-        font-family:Arial, Helvetica, sans-serif;
-    }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    
+}
 
-    body{
-        background:#f4f7fb;
-    }
+body{
+    background:#aeb1b7;
+}
 
-    .container-box{
-        display:flex;
-        min-height:100vh;
-    }
+.cont-of-elem{
+    display:flex;
+    min-height:80vh;
+}
 
-    /* ================= LEFT SIDEBAR ================= */
+/* sidebar */
 
-    .sidebar{
-        width:240px;
-        background:white;
-        padding:20px;
-        border-right:1px solid #ddd;
-    }
+.admin-sid-bar{
+    width:240px;
+    background:rgb(91, 132, 154);
+    border-right:1px solid #ddd;
+    padding:20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 15px;
+}
 
-    .sidebar h2{
-        margin-bottom:30px;
-        color:#111827;
-        text-align:center;
-    }
+.head{
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:30px;
+    color:#111827;
+}
 
-    .sidebar-menu{
-        display:flex;
-        flex-direction:column;
-        gap:12px;
-    }
+.sid-bar-element{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
 
-    .sidebar-menu a{
-        text-decoration:none;
-        color:#374151;
-        padding:14px;
-        border-radius:8px;
-        transition:0.3s;
-        font-weight:600;
-        background:#f3f4f6;
-    }
+.sid-bar-element a{
+    text-decoration:none;
+    padding:14px;
+    border-radius:10px;
+    color:#0a0a0b;
+    font-weight:600;
+    transition:0.3s;
+}
 
-    .sidebar-menu a:hover{
-        background:#06b6d4;
-        color:white;
-    }
+.sid-bar-element a:hover{
+    background:#12385b;
+    color:white;
+}
 
-    .active-link{
-        background:#06b6d4 !important;
-        color:white !important;
-    }
+.active-link{
+    background: #12385b;
+    color:rgb(201, 192, 192) !important;
+}
 
-    /* ================= MAIN CONTENT ================= */
+/* main */
 
-    .main-content{
-        flex:1;
-        padding:25px;
-    }
+.main-box{
+    flex:1;
+    padding:25px;
+}
 
-    .topbar{
-        background:white;
-        padding:18px 25px;
-        border-radius:10px;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        margin-bottom:25px;
-    }
+.top-head{
+    background:rgb(91, 132, 154);
+    padding:18px 25px;
+    border-radius:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    border:1px solid #eee;
+}
 
-    .topbar h1{
-        font-size:24px;
-        color:#111827;
-    }
+.top-head h1{
+    font-size:24px;
+    color:#111827;
+}
 
-    .admin-profile{
-        font-weight:bold;
-    }
+.name-of-admin{
+    font-weight:bold;
+}
 
-    /* ================= STAFF SECTION ================= */
+/* content */
 
-    .staff-box{
-        background:white;
-        padding:25px;
-        border-radius:12px;
-    }
+.staff-box{
+    background:rgb(91, 132, 154);
+    border-radius:14px;
+    padding:25px;
+    border:1px solid #1a6276;
+}
 
-    .staff-box h2{
-        margin-bottom:25px;
-        color:#111827;
-    }
+/* tabs */
 
-    /* tabs */
+.tabs a{
+    padding:12px 20px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+    background:#12385b;
+    color:#cbccd0;
+}
 
-    .tabs{
-        display:flex;
-        gap:15px;
-        margin-bottom:25px;
-    }
+.tabs a:hover{
+    background:#4e667d;
+    color:rgb(219, 212, 212);
+}
 
-    .tab-btn{
-        padding:10px 20px;
-        border:none;
-        background:#f3f4f6;
-        border-radius:8px;
-        font-weight:600;
-    }
+.active-tab{
+    background:#12385b!important;
+    color:rgb(209, 202, 202) !important;
+}
 
-    .tab-active{
-        background:#dbeafe;
-        color:#2563eb;
-    }
+/* table */
 
-    /* table */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
 
-    table{
-        width:100%;
-        border-collapse:collapse;
-    }
+table thead{
+    background:#36699b;
+}
 
-    table thead{
-        background:#f9fafb;
-    }
+table th{
+    padding:15px;
+    text-align:left;
+}
 
-    table th{
-        padding:15px;
-        text-align:left;
-        color:#374151;
-    }
+table td{
+    padding:15px;
+    border-top:1px solid #eee;
+    background-color: #7c96ac;
+}
 
-    table td{
-        padding:15px;
-        border-top:1px solid #eee;
-    }
+/* status */
 
-    /* buttons */
+.pending{
+    color:orange;
+    font-weight:bold;
+}
 
-    .approve-btn{
-        background:#22c55e;
-        color:white;
-        padding:8px 15px;
-        border-radius:6px;
-        text-decoration:none;
-    }
+.approved{
+    color:rgb(9, 79, 9);
+    font-weight:bold;
+}
 
-    .reject-btn{
-        background:#ef4444;
-        color:white;
-        padding:8px 15px;
-        border-radius:6px;
-        text-decoration:none;
-    }
+.blacklisted{
+    color:rgb(104, 16, 16);
+    font-weight:bold;
+}
 
-    .action-btns{
-        display:flex;
-        gap:10px;
-    }
+/* buttons */
+
+.btn{
+    padding:8px 14px;
+    border:none;
+    border-radius:6px;
+    color:rgb(226, 220, 220);
+    cursor:pointer;
+    text-decoration:none;
+    font-size:14px;
+}
+
+.btn-approve{
+    background:rgb(7, 76, 7);
+}
+
+.btn-reject{
+    background:rgb(162, 25, 25);
+}
 
 </style>
-
-<div class="container-box">
-
-    <!-- ================= SIDEBAR ================= -->
-    <div class="sidebar">
-        <h2>Adventure Admin</h2>
-        <div class="sidebar-menu">
-            <a href="{{ url_for('admin_dashboard') }}">
-                Dashboard
-            </a>
-            <a href="{{ url_for('user_dashboard') }}">
-                Manage Users
-            </a>
-            <a href="{{ url_for('manage_staff') }}" class="active-link">
-                Manage Staff
-            </a>
-            <a href="{{ url_for('manage_staff') }}">
-                Pending Staff
-            </a>
-            <a href="{{ url_for('add_routes') }}">
-                Manage Treks
-            </a>
-            <a href="{{ url_for('add_routes') }}">
-                Create Trek
-            </a>
-            <a href="#">
-                Bookings
-            </a>
-            <a href="#">
-                Reports
-            </a>
-            <a href="#">
-                Settings
-            </a>
-            <a  ref="{{ url_for('logout') }}">
-                Logout
-            </a>
+<div class="cont-of-elem">
+    <!-- sidebar -->
+    <div class="admin-sid-bar">
+        <div class="head">Adventure Admin</div>
+        <div class="sid-bar-element">
+            <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('add_trek') }}"> Create Treks</a>
+            <a href="{{ url_for('manage_staff') }}" class="active-link">Manage Staff</a>
+            <a href="{{ url_for('user_dashboard') }}">Manage Users</a>
+            <a href="{{ url_for('manage_trek') }}">Manage Treck</a>
+            <a href="{{ url_for('tracking_table') }}">Track Table</a>
+            <a href="#">Settings</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
         </div>
     </div>
-
-    <!-- ================= MAIN CONTENT ================= -->
-    <div class="main-content">
-        <!-- topbar -->
-        <div class="topbar">
+    <!-- main -->
+    <div class="main-box">
+        <!-- top navbar -->
+        <div class="top-head">
             <h1>Trekking Management Application</h1>
-            <div class="admin-profile">
-                Admin
+            <div class="name-of-admin">
+                 {{ admin.usrname }}
             </div>
         </div>
-
-        <!-- ================= STAFF REQUEST SECTION ================= -->
+        <!-- manage staff -->
         <div class="staff-box">
-            <h2>Staff Requests</h2>
-            <!-- tabs -->
-            <div class="tabs">
-                <button class="tab-btn tab-active">Pending</button>
-                <button class="tab-btn">Approved</button>
-                <button class="tab-btn">Blacklisted</button>
-            </div>
-            <!-- table -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>Staff ID</th>
-                        <th>Name</th>
-                        <th>Gender</th>
-                        <th>Phone</th>
-                        <th>Skill</th>
-                        <th>Status</th>
-                        th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for staf in staff %}
-                    <tr>
-                        <td>{{ staf.staf_ref_id }}</td>
-                        <td>{{ staf.staf_nam }}</td>
-                        <td>{{ staf.gender }}</td>
-                        <td>{{ staf.phon_no }}</td>
-                        <td>{{ staf.skiil_area }}</td>
-                        <td>
-                            {% if staf.verifed %}
-                                Approved
-                            {% else %}
-                                Pending
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="/approve_staff/{{ staf.staf_ref_id }}"
-                                   class="approve-btn">
-                                    Pending
-                                </a>
-                            <div class="action-btns">
-                                <a href="/approve_staff/{{ staf.staf_ref_id }}"
-                                   class="approve-btn">
-                                    Approve
-                                </a>
-                                <a href="/blacklist/{{ staf.staf_ref_id }}"
-                                   class="reject-btn">
-                                    Blacklist
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+            <h2 style="margin-bottom:20px;">
+                Staff Requests
+            </h2>
     </div>
+    <!-- tabs -->
+    <div class="tabs">
+        <a href="{{ url_for('manage_staff', tab='pending') }}"
+        class="{% if active_tab == 'pending' %}active-tab{% endif %}">
+            Pending ({{ pending_staff|length }})
+        </a>
+        <a href="{{ url_for('manage_staff', tab='approved') }}"
+        class="{% if active_tab == 'approved' %}active-tab{% endif %}">
+            Approved ({{ approved_staff|length }})
+        </a>
+        <a href="{{ url_for('manage_staff', tab='blacklisted') }}"
+        class="{% if active_tab == 'blacklisted' %}active-tab{% endif %}">
+            Blacklisted ({{ blacklisted_staff|length }})
+        </a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Staff ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Verify</th>
+                <th>Status</th>
+                <th>Profile</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if active_tab == "pending" %}
+                {% for staff in pending_staff %}
+                <tr>
+                    <td>{{ staff.usr_ref_id }}</td>
+                    <td>{{ staff.usrname }}</td>
+                    <td>{{ staff.usr_mail }}</td>
+                    <td>{{ staff.phone_no }}</td>
+                    <td>
+                        {% if staff.is_it_actve == "Approved" %}
+                            Verified
+                        {% else %}
+                            Not Verified
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="pending">
+                            {{ staff.staf_satus }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('staff_profile', staff_id=staff.usr_ref_id) }}"
+                        class="btn btn-approve">
+                            Profile
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('approve_staff', staff_id=staff.usr_ref_id) }}"
+                        class="btn btn-approve">
+                            Approve
+                        </a>
+                        <a href="{{ url_for('reject_staff', staff_id=staff.usr_ref_id) }}"
+                        class="btn btn-reject">
+                            Blacklist
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% elif active_tab == "approved" %}
+                {% for staff in approved_staff %}
+                <tr>
+                    <td>{{ staff.usr_ref_id }}</td>
+                    <td>{{ staff.usrname }}</td>
+                    <td>{{ staff.usr_mail }}</td>
+                    <td>{{ staff.phone_no }}</td>
+                    <td>Verified</td>
+                    <td>
+                        <span class="approved">{{ staff.staf_satus }}</span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('staff_profile', staff_id=staff.usr_ref_id) }}"
+                        class="btn btn-approve">
+                            Profile
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('reject_staff', staff_id=staff.usr_ref_id) }}"
+                        class="btn btn-reject">
+                            Blacklist
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% elif active_tab == "blacklisted" %}
+                {% for staff in blacklisted_staff %}
+                <tr>
+                    <td>{{ staff.usr_ref_id }}</td>
+                    <td>{{ staff.usrname }}</td>
+                    <td>{{ staff.usr_mail }}</td>
+                    <td>{{ staff.phone_no }}</td>
+                    <td>Not Verified</td>
+                    <td>
+                        <span class="blacklisted">
+                            {{ staff.staf_satus }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('staff_profile', staff_id=staff.usr_ref_id) }}"
+                        class="btn btn-approve">
+                            Profile
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('approve_staff', staff_id=staff.usr_ref_id) }}"
+                        class="btn btn-approve">
+                            Approve Again
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
 </div>
-{% endblock %}
 
+{% endblock %}

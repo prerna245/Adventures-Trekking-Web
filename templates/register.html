@@ -1,14 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Page</title>
     <style>
         .fist-box{
             margin-top: 40px;
@@ -24,11 +16,11 @@
         .log-form-box {
             width: 400px;
             height: 520px;
-            border: 2px solid black;
+            border: 2px solid rgb(11, 59, 67);
             border-radius: 20px;
             margin: 20px auto;
             padding: 15px;
-            background-color: #98c0ac;
+            background-color: rgb(117, 165, 173);
         }
 
         .log {
@@ -54,7 +46,7 @@
             padding: 10px;
             border: 2px solid black;
             border-radius: 5px;
-            background-color: #c9dcd1;
+            
             font-size: 13px;
 
         }
@@ -62,7 +54,7 @@
             height: 35px;
             width: 170px;
             border: 2px solid black;
-            background-color: #c9dcd1;
+            background-color: rgb(83, 133, 142);
             text-align: center;
             font-size: medium;
             margin-top: 15px;
@@ -86,8 +78,7 @@
         }
     </style>
 
-</head>
-<body>
+
     <div class="fist-box">
         <div class="log-form-box">
             <h2 class="log">Register Form</h2>
@@ -128,8 +119,7 @@
             <a href="{{ url_for('index') }}" >Back To Home</a>
         </div>
     </div>
-</body>
-</html>
+
 
 
 {% endblock %}

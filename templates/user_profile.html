@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#939eb3;
+}
+
+/* MAIN LAYOUT */
+
+.cont-of-elem{
+    display:flex;
+    min-height:100vh;
+}
+
+
+/* MAIN CONTENT */
+
+.main-container{
+    flex:1;
+    padding:30px;
+}
+
+/* BOXES */
+
+.box{
+    background:rgb(91, 132, 154);
+    padding:25px;
+    border-radius:14px;
+    border:1px solid #eee;
+    margin-bottom:25px;
+}
+
+.box h2{
+    margin-bottom:20px;
+    color:#111827;
+}
+
+/* PROFILE TABLE */
+
+.profile-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.profile-table th{
+    width:220px;
+    text-align:left;
+    padding:15px;
+    background:#1f6380;
+}
+
+.profile-table td{
+    padding:15px;
+    border-top:1px solid #eee;
+}
+
+/* TREK TABLE */
+
+.track-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.track-table thead{
+    background:#1f6380;
+}
+
+.track-table th{
+    padding:15px;
+    text-align:left;
+}
+
+.track-table td{
+    padding:15px;
+    border-top:1px solid #eee;
+}
+
+/* STATUS */
+
+.upcoming{
+    color:orange;
+    font-weight:bold;
+}
+
+.completed{
+    color:green;
+    font-weight:bold;
+}
+
+</style>
+
+
+<div class="cont-of-elem">
+    <!-- MAIN CONTENT -->
+
+    <div class="main-container">
+
+        <!-- USER PROFILE -->
+
+        <div class="box">
+
+            <h2>
+                {{ user.usrname }} Profile
+            </h2>
+
+            <table class="profile-table">
+
+                <tr>
+                    <th>User ID</th>
+                    <td>{{ user.usr_ref_id }}</td>
+                </tr>
+
+                <tr>
+                    <th>Name</th>
+                    <td>{{ user.usrname }}</td>
+                </tr>
+
+                <tr>
+                    <th>Email</th>
+                    <td>{{ user.usr_mail }}</td>
+                </tr>
+
+                <tr>
+                    <th>Contact</th>
+                    <td>{{ user.phone_no }}</td>
+                </tr>
+
+                <tr>
+                    <th>City</th>
+                    <td>{{ user.city_of_usr }}</td>
+                </tr>
+
+                <tr>
+                    <th>Country</th>
+                    <td>{{ user.county }}</td>
+                </tr>
+
+                <tr>
+                    <th>Status</th>
+
+                    <td>
+
+                        {% if user.is_blacklsted %}
+
+                            Blacklisted
+
+                        {% else %}
+
+                            Active
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+
+        <!-- TREK DETAILS -->
+
+        <div class="box">
+
+            <h2>
+                Trek Details
+            </h2>
+
+            <table class="track-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Booking ID</th>
+                        <th>Track Name</th>
+                        <th>Destination</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for booking in user_bookings %}
+
+                    <tr>
+
+                        <td>{{ booking.boking_id }}</td>
+
+                        <td>
+                            {{ booking.trek.rout_name }}
+                        </td>
+
+                        <td>
+                            {{ booking.trek.destination }}
+                        </td>
+
+                        <td>
+                            {{ booking.trek.strt_trck_date }}
+                        </td>
+
+                        <td>
+                            {{ booking.trek.end_trck_date }}
+                        </td>
+
+                        <td>
+
+                            {% if booking.trek.track_status == "Upcoming" %}
+
+                                <span class="upcoming">
+                                    Upcoming
+                                </span>
+
+                            {% else %}
+
+                                <span class="completed">
+                                    {{ booking.trek.track_status }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

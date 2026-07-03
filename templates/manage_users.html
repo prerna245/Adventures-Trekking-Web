@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial, Helvetica, sans-serif;
+    }
+
+    body{
+        background:#939eb3;
+    }
+
+    .cont-of-elem{
+        display:flex;
+        min-height:100vh;
+    }
+
+    /* side bar  */
+
+    .admin-sid-bar{
+        width:240px;
+        background:rgb(91, 132, 154);
+        border-right:1px solid #070404;
+        padding:20px;
+    }
+
+    .head{
+        font-size:22px;
+        font-weight:bold;
+        margin-bottom:30px;
+        color:#111827;
+    }
+
+    .sid-bar-element{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+    }
+
+    .sid-bar-element a{
+        text-decoration:none;
+        padding:14px;
+        border-radius:10px;
+        color:#0a0c0c;
+        font-weight:600;
+        transition:0.3s;
+    }
+
+    .sid-bar-element a:hover{
+        background:#12385b;
+        color:rgb(224, 216, 216);
+    }
+
+    .active-link{
+        background:#12385b;
+        color:white !important;
+    }
+
+    /* main content  */
+
+    .main-box{
+        flex:1;
+        padding:25px;
+    }
+
+    .top-head{
+        background:rgb(91, 132, 154);
+        padding:18px 25px;
+        border-radius:12px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:25px;
+        border:1px solid #206562;
+    }
+
+    .top-head h1{
+        color:#111827;
+    }
+
+    .user-box{
+        background:rgb(100, 169, 184);
+        padding:25px;
+        border-radius:14px;
+        border:1px solid #eee;
+    }
+
+    /* box of active and black user*/
+
+    .box{
+        margin-bottom:20px;
+    }
+
+    .box a{
+        text-decoration:none;
+        padding:12px 20px;
+        background:#d8dddf;
+        color:#111827;
+        border-radius:8px;
+        margin-right:10px;
+        font-weight:bold;
+    }
+
+    .active-tab{
+        background:#213a71 !important;
+        color:white !important;
+    }
+    /* table*/
+    table{
+        width:100%;
+        border-collapse:collapse;
+    }
+    table thead{
+        background:#256689;
+    }
+    table th{
+        padding:15px;
+        text-align:left;
+    }
+    table td{
+        padding:15px;
+        border-top:1px solid #eee;
+    }
+    /* butons */
+
+    .butn{
+        padding:8px 14px;
+        border-radius:6px;
+        text-decoration:none;
+        color:rgb(230, 224, 224);
+        font-size:14px;
+    }
+
+    .profile-butn{
+        background:#0e3c4b;
+    }
+
+    .black-butn{
+        background:rgb(193, 35, 35);
+    }
+
+    .green-butn{
+        background:rgb(6, 120, 6);
+    }
+    /*status*/
+    .blacklisted{
+        color:rgb(194, 34, 34);
+        font-weight:bold;
+    }
+    .active{
+        color:rgb(9, 132, 9);
+        font-weight:bold;
+    }
+</style>
+<div class="cont-of-elem">
+    <!-- side bar of admin-->
+    <div class="admin-sid-bar">
+        <div class="head">Adventure Admin</div>
+        <div class="sid-bar-element">
+            <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('add_trek') }}"> Create Treks</a>
+            <a href="{{ url_for('manage_staff') }}">Manage Staff</a>
+            <a href="{{ url_for('manage_users') }}" class="active-link">Manage Users</a>
+            <a href="{{ url_for('manage_trek') }}">Manage Trek</a>
+            <a href="{{ url_for('tracking_table') }}">Track Table</a>
+            <a href="#">Settings</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+    <!-- main content of user -->
+    <div class="main-box">
+        <div class="top-head">
+            <h1>Manage Users</h1>
+            <div>{{ admin.usrname }}</div>
+        </div>
+        <div class="user-box">
+            <div class="box">
+                <a href="{{ url_for('manage_users', tab='active') }}"
+                class="{% if active_tab == 'active' %}active-tab{% endif %}">
+                    Active Users
+                </a>
+                <a href="{{ url_for('manage_users', tab='blacklisted') }}"
+                class="{% if active_tab == 'blacklisted' %}active-tab{% endif %}">
+                    Blacklisted Users
+                </a>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Profile</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if active_tab == "active" %}
+                    {% for user in active_users %}
+                    <tr>
+                        <td>{{ user.usr_ref_id }}</td>
+                        <td>{{ user.usrname }}</td>
+                        <td>{{ user.usr_mail }}</td>
+                        <td>{{ user.phone_no }}</td>
+                        <td>
+                            <span class="active">Active</span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('user_profile', user_id=user.usr_ref_id) }}"
+                            class="butn profile-butn">
+                                View Profile
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('blacklist_user', user_id=user.usr_ref_id) }}"
+                            class="butn black-butn">
+                                Blacklist
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    {% for user in blacklisted_users %}
+                    <tr>
+                        <td>{{ user.usr_ref_id }}</td>
+                        <td>{{ user.usrname }}</td>
+                        <td>{{ user.usr_mail }}</td>
+                        <td>{{ user.phone_no }}</td>
+                        <td>
+                            <span class="blacklisted">Blacklisted</span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('user_profile', user_id=user.usr_ref_id) }}"
+                            class="butn profile-butn">
+                                View Profile
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('unblacklist_user', user_id=user.usr_ref_id) }}"
+                            class="butn green-butn">
+                                Remove Blacklist
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

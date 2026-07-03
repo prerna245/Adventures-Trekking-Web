@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Trek</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background:#f4f6f9;
+            padding:30px;
+        }
+
+        .form-box{
+            width:400px;
+            background:white;
+            padding:25px;
+            margin:auto;
+            border-radius:10px;
+        }
+
+        input{
+            width:100%;
+            padding:10px;
+            margin-top:10px;
+            margin-bottom:15px;
+        }
+
+        button{
+            width:100%;
+            padding:10px;
+            background:#2563eb;
+            color:white;
+            border:none;
+            border-radius:5px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="form-box">
+
+    <h2>Edit Trek</h2>
+
+    <form method="POST">
+
+        <input type="text"
+               name="rout_name"
+               value="{{ trek.rout_name }}"
+               placeholder="Trek Name">
+
+        <input type="text"
+               name="destination"
+               value="{{ trek.destination }}"
+               placeholder="Location">
+
+        <input type="text"
+               name="difficulty_level"
+               value="{{ trek.difficulty_level }}"
+               placeholder="Difficulty">
+
+        <input type="number"
+               name="capcity"
+               value="{{ trek.capcity }}"
+               placeholder="Capacity">
+
+        <input type="number"
+               name="remening_spots"
+               value="{{ trek.remening_spots }}"
+               placeholder="Remaining Spots">
+
+        <button type="submit">
+            Update Trek
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

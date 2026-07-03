@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Profile</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#bcbdc0;
+        }
+
+        /* main container */
+
+        .main-container{
+            width:95%;
+            margin:30px auto;
+        }
+
+        /* page heading */
+
+        .page-head{
+            background:rgb(91, 132, 154);
+            padding:20px;
+            border-radius:12px;
+            border:1px solid #2f3c57;
+            margin-bottom:25px;
+        }
+
+        .page-head h1{
+            color:#111827;
+            font-size:28px;
+        }
+
+        /* common box */
+
+        .box{
+            background:rgb(91, 132, 154);
+            border-radius:14px;
+            padding:25px;
+            border:1px solid #e5e7eb;
+            margin-bottom:25px;
+            border: 2px solid black;
+            
+        }
+
+        /* profile table */
+
+        .profile-table{
+            width:600px;
+            border-collapse:collapse;
+            background-color: #4e7b8b;
+            
+        }
+
+        .profile-table th{
+            width:250px;
+            text-align:left;
+            padding:16px;
+            background:#8ca9b3;
+            color:#060508;
+            border-bottom:1px solid #124b68;
+        }
+
+        .profile-table td{
+            padding:16px;
+            border-bottom:1px solid #eee;
+            color:#020203;
+        }
+
+        /* status */
+
+        .pending{
+            color:rgb(148, 109, 37);
+            font-weight:bold;
+        }
+
+        .approved{
+            color:rgb(21, 92, 21);
+            font-weight:bold;
+        }
+
+        .blacklisted{
+            color:rgb(126, 34, 34);
+            font-weight:bold;
+        }
+
+        /* trek table */
+
+        .trek-table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+
+        .trek-table thead{
+            background:#1b3d60;
+        }
+
+        .trek-table th{
+            padding:15px;
+            text-align:left;
+            color:#040710;
+        }
+
+        .trek-table td{
+            padding:15px;
+            border-top:1px solid #b2a4a4;
+            color:#050505;
+        }
+
+        /* heading */
+
+        .box h2{
+            margin-bottom:20px;
+            color:#080a0b;
+        }
+
+        .no-track{
+            padding:20px;
+            background:#f9fafb;
+            border-radius:10px;
+            color:#6b7280;
+        }
+
+        </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- top heading -->
+        <div class="page-head">
+            <h1>{{ staff.usrname }} Profile</h1>
+        </div>
+        <!-- profile details -->
+        <div class="box">
+            <h2>Staff Information</h2>
+            <table class="profile-table">
+                <tr>
+                    <th>Staff ID</th>
+                    <td>{{ staff.usr_ref_id }}</td>
+                </tr>
+                <tr>
+                    <th>Full Name</th>
+                    <td>{{ staff.usrname }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ staff.usr_mail }}</td>
+                </tr>
+                <tr>
+                    <th>Contact Number</th>
+                    <td>{{ staff.phone_no }}</td>
+                </tr>
+                <tr>
+                    <th>Country</th>
+                    <td>{{ staff.county }}</td>
+                </tr>
+                <tr>
+                    <th>City</th>
+                    <td>{{ staff.city_of_usr }}</td>
+                </tr>
+                <tr>
+                    <th>Verification</th>
+                    <td>
+                        {% if staff.is_it_actve == "Approved" %}
+                            Verified
+                        {% else %}
+                            Not Verified
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        {% if staff.staf_satus == "Approved" %}
+                            <span class="approved">Approved</span>
+                        {% elif staff.staf_satus == "Blacklisted" %}
+                            <span class="blacklisted">Blacklisted</span>
+                        {% else %}
+                            <span class="pending">Pending</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Joined On</th>
+                    <td>{{ staff.adventure_began.strftime('%d %b %Y') }}</td>
+                </tr>
+            </table>
+        </div>
+        <!-- track details -->
+        <div class="box">
+            <h2>
+                Track Details Conducted By {{ staff.usrname }}
+            </h2>
+            {% if staff_tracks %}
+            <table class="trek-table">
+                <thead>
+                    <tr>
+                        <th>Track ID</th>
+                        <th>Track Name</th>
+                        <th>Destination</th>
+                        <th>Staff Id</th>
+                        <th>Difficulty</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Slots</th>
+                        <th>Remaining</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for track in staff_tracks %}
+
+                    <tr>
+                        <td>{{ track.adv_rout_id }}</td> 
+                        <td>{{ track.rout_name }}</td> 
+                        <td>{{ track.destination }}</td> 
+                        <td>{{ track.staf_fr_this_rout }}</td> 
+                        <td>{{ track.difficulty_level }}</td> 
+                        <td>{{ track.strt_trck_date }}</td> 
+                        <td>{{ track.end_trck_date }}</td> 
+                        <td>{{ track.capcity }}</td> 
+                        <td>{{ track.remening_spots }}</td> 
+                        <td>{{ track.total_days_are }} Days</td> 
+                        <td>{{ track.track_status }}</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="no-track">
+
+                No tracks assigned to this staff.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+</body>
+</html>
