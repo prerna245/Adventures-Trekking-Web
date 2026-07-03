@@ -289,32 +289,24 @@ def edit_user_profile():
 
     # update profile
     if request.method == "POST":
-
         user.usrname = request.form.get("usrname")
         user.usr_mail = request.form.get("usr_mail")
         user.phone_no = request.form.get("phone_no")
         user.gender = request.form.get("gender")
         user.city_of_usr = request.form.get("city_of_usr")
         user.county = request.form.get("county")
-
         db.session.commit()
-
         return redirect(url_for("view_profile_user"))
-
-    return render_template(
-        "edit_user_profile.html",
-        user=user
-    )
+    return render_template("edit_user_profile.html",user=user)
 
 
-
-
+#user dashboard
 @app.route("/user_treker_Dashboard")
 def user_treker():
     return render_template("user_treker_Dashboard.html")
 
 
-
+#staff dashboard
 @app.route('/staff_dashboard')
 def staff_dashboard():
     # login check
@@ -354,21 +346,14 @@ def staff_dashboard():
         closed_treks=closed_treks
     )
 
-
+#staff can edit
 @app.route("/edit_staff_profile", methods=["GET", "POST"])
 def edit_staff_profile():
-
     user_id = session.get("user_id")
-
     if not user_id:
         return redirect(url_for("login"))
-
-    staff = Adventure_Staff.query.filter_by(
-        usr_ref_id=user_id
-    ).first()
-
+    staff = Adventure_Staff.query.filter_by(usr_ref_id=user_id).first()
     if request.method == "POST":
-
         staff.staf_nam = request.form.get("staf_nam")
         staff.gender = request.form.get("gender")
         staff.emerg_contat_no = request.form.get("emerg_contat_no")
@@ -376,7 +361,6 @@ def edit_staff_profile():
         staff.yers_of_work = request.form.get("yers_of_work")
         staff.langugs_known = request.form.get("langugs_known")
         staff.skiil_area = request.form.get("skiil_area")
-
         db.session.commit()
         return redirect(url_for("staff_dashboard"))
     return render_template("edit_staff_profile.html",staff=staff)
@@ -403,7 +387,7 @@ def current_tracks():
     )
 
 
-# close track
+# close trek
 @app.route("/closed_tracks")
 def closed_tracks():
 
@@ -501,30 +485,17 @@ def change_track_status(track_id, new_status):
 
 @app.route('/manage_staff')
 def manage_staff():
-
     # admin login check
     admin_id = session.get("user_id")
-
     if not admin_id:
         return redirect(url_for("login"))
-
     admin = AdventureUser.query.get(admin_id)
-
     # active tab
     active_tab = request.args.get("tab", "pending")
-
     # pending staff
-    pending_staff = AdventureUser.query.filter_by(
-        rolee="staff",
-        staf_satus="Pending"
-    ).all()
-
+    pending_staff = AdventureUser.query.filter_by(rolee="staff",staf_satus="Pending").all()
     # approved staff
-    approved_staff = AdventureUser.query.filter_by(
-        rolee="staff",
-        staf_satus="Approved"
-    ).all()
-
+    approved_staff = AdventureUser.query.filter_by(rolee="staff",staf_satus="Approved").all()
     # blacklisted staff
     blacklisted_staff = AdventureUser.query.filter_by(
         rolee="staff",
@@ -544,29 +515,17 @@ def manage_staff():
 
 @app.route("/manage_users")
 def manage_users():
-
     # admin login check
     admin_id = session.get("user_id")
-
     if not admin_id:
         return redirect(url_for("login"))
-
     admin = AdventureUser.query.get(admin_id)
-
     # active tab
     active_tab = request.args.get("tab", "active")
-
     # active users
-    active_users = AdventureUser.query.filter_by(
-        rolee="user",
-        is_blacklsted=False
-    ).all()
-
+    active_users = AdventureUser.query.filter_by(rolee="user",is_blacklsted=False).all()
     # blacklisted users
-    blacklisted_users = AdventureUser.query.filter_by(
-        rolee="user",
-        is_blacklsted=True
-    ).all()
+    blacklisted_users = AdventureUser.query.filter_by(rolee="user",is_blacklsted=True).all()
 
     return render_template(
         "manage_users.html",
@@ -578,9 +537,7 @@ def manage_users():
     )
 
 
-
-# BLACKLIST USER
-
+#blacklist user
 @app.route("/blacklist_user/<int:user_id>")
 def blacklist_user(user_id):
 
@@ -603,38 +560,21 @@ def blacklist_user(user_id):
 
 @app.route("/unblacklist_user/<int:user_id>")
 def unblacklist_user(user_id):
-
     user = AdventureUser.query.get_or_404(user_id)
-
     user.is_blacklsted = False
-
     db.session.commit()
+    return redirect(url_for("manage_users",tab="active"))
 
-    return redirect(
-        url_for(
-            "manage_users",
-            tab="active"
-        )
-    )
-
-
-# USER PROFILE
-
-
+#user profile 
 @app.route("/user_profile/<int:user_id>")
 def user_profile(user_id):
-
     # admin login check
     admin_id = session.get("user_id")
-
     if not admin_id:
         return redirect(url_for("login"))
-
     admin = AdventureUser.query.get(admin_id)
-
     # selected user
     user = AdventureUser.query.get_or_404(user_id)
-
     # bookings of user
     user_bookings = AdventureBooking.query.filter_by(
         adv_usr_id=user_id
@@ -683,7 +623,7 @@ def staff_profile(staff_id):
     )
 
 
-#staf get approve by admin
+# staf get approve by admin
 @app.route('/approve_staff/<int:staff_id>')
 def approve_staff(staff_id):
     staff = AdventureUser.query.get_or_404(staff_id)
@@ -711,7 +651,7 @@ def approve_staff(staff_id):
     db.session.commit()
     return redirect(url_for('manage_staff'))
 
-#staf get reject by admin
+# staf get reject by admin
 @app.route('/reject_staff/<int:staff_id>')
 def reject_staff(staff_id):
     staff = AdventureUser.query.get_or_404(staff_id)
@@ -721,7 +661,7 @@ def reject_staff(staff_id):
     db.session.commit()
     return redirect(url_for('manage_staff'))
 
-#trek manage by admin 
+# trek manage by admin 
 @app.route('/manage_trek')
 def manage_trek():
     #admin
