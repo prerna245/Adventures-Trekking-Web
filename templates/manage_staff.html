@@ -19,7 +19,11 @@ body{
     min-height:80vh;
 }
 
+<<<<<<< HEAD
 /* sidebar */
+=======
+  
+>>>>>>> 29d6cdfe4875817f2500115f14a113bb3b6f9800
 
 .admin-sid-bar{
     width:240px;
@@ -63,7 +67,10 @@ body{
     color:rgb(201, 192, 192) !important;
 }
 
+<<<<<<< HEAD
 /* main */
+=======
+>>>>>>> 29d6cdfe4875817f2500115f14a113bb3b6f9800
 
 .main-box{
     flex:1;
@@ -90,7 +97,11 @@ body{
     font-weight:bold;
 }
 
+<<<<<<< HEAD
 /* content */
+=======
+   
+>>>>>>> 29d6cdfe4875817f2500115f14a113bb3b6f9800
 
 .staff-box{
     background:rgb(91, 132, 154);
@@ -180,6 +191,7 @@ table td{
 }
 
 </style>
+<<<<<<< HEAD
 <div class="cont-of-elem">
     <!-- sidebar -->
     <div class="admin-sid-bar">
@@ -199,12 +211,61 @@ table td{
     <div class="main-box">
         <!-- top navbar -->
         <div class="top-head">
+=======
+
+<div class="container-box">
+
+    
+    <div class="sidebar">
+        <h2>Adventure Admin</h2>
+        <div class="sidebar-menu">
+            <a href="{{ url_for('admin_dashboard') }}">
+                Dashboard
+            </a>
+            <a href="{{ url_for('user_dashboard') }}">
+                Manage Users
+            </a>
+            <a href="{{ url_for('manage_staff') }}" class="active-link">
+                Manage Staff
+            </a>
+            <a href="{{ url_for('manage_staff') }}">
+                Pending Staff
+            </a>
+            <a href="{{ url_for('add_routes') }}">
+                Manage Treks
+            </a>
+            <a href="{{ url_for('add_routes') }}">
+                Create Trek
+            </a>
+            <a href="#">
+                Bookings
+            </a>
+            <a href="#">
+                Reports
+            </a>
+            <a href="#">
+                Settings
+            </a>
+            <a  ref="{{ url_for('logout') }}">
+                Logout
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- topbar -->
+        <div class="topbar">
+>>>>>>> 29d6cdfe4875817f2500115f14a113bb3b6f9800
             <h1>Trekking Management Application</h1>
             <div class="name-of-admin">
                  {{ admin.usrname }}
             </div>
         </div>
+<<<<<<< HEAD
         <!-- manage staff -->
+=======
+
+>>>>>>> 29d6cdfe4875817f2500115f14a113bb3b6f9800
         <div class="staff-box">
             <h2 style="margin-bottom:20px;">
                 Staff Requests
