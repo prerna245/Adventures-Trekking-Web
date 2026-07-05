@@ -1,11 +1,134 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    staff can edit
-</body>
-</html>
+
+{% extends "base.html" %}
+{% block content %}
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial, Helvetica, sans-serif;
+    }
+    body{
+        background:#b2b6bb;
+    }
+    .main-container{
+        width:100%;
+        min-height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        padding:40px;
+    }
+    .profile-box{
+        width:100%;
+        max-width:800px;
+        background:rgb(40, 113, 116);
+        padding:35px;
+        border-radius:15px;
+        box-shadow:0 4px 15px rgba(0,0,0,0.08);
+    }
+    .profile-box h1{
+        margin-bottom:30px;
+        color:#e4e7e8;
+        text-align:center;
+    }
+    .form-group{
+        margin-bottom:20px;
+    }
+    .form-group label{
+        display:block;
+        margin-bottom:8px;
+        font-weight:bold;
+        color:#050608;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select{
+        width:100%;
+        padding:14px;
+        border:1px solid #b0c9cc;
+        border-radius:8px;
+        font-size:15px;
+    }
+    .form-group textarea{
+        resize:none;
+        height:100px;
+    }
+    .save-butn{
+        width:100%;
+        padding:15px;
+        background:#094852;
+        color:white;
+        border:none;
+        border-radius:8px;
+        font-size:16px;
+        font-weight:bold;
+        cursor:pointer;
+        transition:0.3s;
+    }
+    .save-butn:hover{
+        background:#156974;
+    }
+</style>
+<div class="main-container">
+    <div class="profile-box">
+        <h1>Edit Staff Profile</h1>
+        <form method="POST">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text"name="staf_nam"value="{{ staff.staf_nam }}"required>
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select name="gender">
+                    <option value="Male"
+                        {% if staff.gender == "Male" %}
+                            selected
+                        {% endif %}
+                    >
+                        Male
+                    </option>
+                    <option value="Female"
+                        {% if staff.gender == "Female" %}
+                            selected
+                        {% endif %}
+                    >
+                        Female
+                    </option>
+                    <option value="Other"
+                        {% if staff.gender == "Other" %}
+                            selected
+                        {% endif %}
+                    >
+                        Other
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Emergency Contact</label>
+                <input type="text"name="emerg_contat_no"value="{{ staff.emerg_contat_no }}">
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text"name="phon_no"value="{{ staff.phon_no }}">
+            </div>
+            <div class="form-group">
+                <label>Years Of Experience</label>
+                <input type="number"name="yers_of_work"value="{{ staff.yers_of_work }}">                    
+            </div>
+            <div class="form-group">
+                <label>Languages Known</label>
+                <input type="text"name="langugs_known"value="{{ staff.langugs_known }}">
+            </div>
+            <div class="form-group">
+                <label>Skill Area</label>
+                <input 
+                    type="text"name="skiil_area"value="{{ staff.skiil_area }}">
+            </div>
+            <button type="submit" class="save-butn">Save Profile</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
