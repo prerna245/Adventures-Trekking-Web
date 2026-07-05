@@ -1,11 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    close
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    body{
+        background:#a0a4a9;
+        font-family:Arial;
+    }
+    .contaner{
+        padding:30px;
+    }
+    .head{
+        margin-bottom:25px;
+    }
+    .head h1{
+        color:#111827;
+    }
+    table{
+        width:100%;
+        border-collapse:collapse;
+        background:rgb(91, 132,154 );
+        border-radius:10px;
+        overflow:hidden;
+    }
+    thead{
+        background:#0d5253;
+        color:white;
+    }
+    th,td{
+        padding:15px;
+        text-align:left;
+    }
+    tr{
+        border-bottom:1px solid #118484;
+    }
+    .completed{
+        color:rgb(227, 20, 20);
+        font-weight:bold;
+    }
+</style>
+<div class="contaner">
+    <div class="head">
+        <h1>Closed Treks</h1>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Trek Name</th>
+                <th>Location</th>
+                <th>Participants</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% if tracks %}
+            {% for trek in tracks %}
+            <tr>
+                <td>{{ trek.rout_name }}</td>
+                <td>{{ trek.destination }}</td>
+                <td>{{ trek.bookings|length }}</td>
+                <td>{{ trek.strt_trck_date.strftime('%d %b %Y') }}</td>
+                <td>{{ trek.end_trck_date.strftime('%d %b %Y') }}</td>
+                <td>
+                    <span class="completed">Completed</span>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="6" style="text-align:center;">
+                    You haven't complete any track. If u have completed, contact Admin for that.
+                </td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
