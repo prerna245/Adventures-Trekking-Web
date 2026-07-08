@@ -1,6 +1,6 @@
 from flask import Flask, redirect, render_template, request, url_for,session
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime,date
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -100,10 +100,12 @@ class Adventure_route(db.Model):
     track_status = db.Column(db.String(30), default="Upcoming")
     status_open_close = db.Column(db.String(20), default="Open")
     staf_fr_this_rout= db.Column(db.Integer, db.ForeignKey('adventures_users.usr_ref_id'))
-    
+    requested_slots = db.Column(db.Integer)
+    slot_request_status = db.Column(db.String(20), default="Approved")
+
     #relationship
     bookings = db.relationship('AdventureBooking',backref='trek',lazy=True,cascade="all, delete")
-
+    staff = db.relationship("AdventureUser",foreign_keys=[staf_fr_this_rout],backref="assigned_treks")
 
 #revieww table for score
 class Adventures_Review(db.Model):
@@ -188,29 +190,48 @@ def login():
         # default
         return "Role not found"
     return render_template("login.html")
+ 
+#see booked participants
+@app.route("/participant_list/<int:trek_id>")
+def participant_list(trek_id):
+    admin = AdventureUser.query.get("admin_id")
+    trek = Adventure_route.query.get_or_404(trek_id)
 
+    bookings = AdventureBooking.query.filter_by(adv_rout_id=trek_id,booking_stat="Booked").all()
+
+    return render_template("participant_list.html",admin=admin,trek=trek,bookings=bookings)
+#admin dashboard
 @app.route("/admin_dashboard")
 def admin_dashboard():
+
     if not session.get("user_id"):
         return redirect(url_for("login"))
 
     if session.get("role") != "admin":
         return "Access Denied"
 
-    #staff ,trek, and user detail is store
-    total_staf = AdventureUser.query.filter_by(rolee="staff").count()
-    total_treks = Adventure_route.query.count()
-    pnding_staff = AdventureUser.query.filter_by(rolee="staff",staf_satus="Pending").count()
-    staff = AdventureUser.query.filter_by(rolee="staff").all()
-    total_users=AdventureUser.query.filter_by(rolee="user").count()
-    #get admin detail
-    admin_id = session.get("user_id")    #this is for login admin id
-    admin = AdventureUser.query.get(admin_id)
-    #get booking detail
-    total_bookings = AdventureBooking.query.count()
-    recent_bookings = AdventureBooking.query.order_by(AdventureBooking.reserved_on.desc()).limit(5).all()
-    return render_template('admin_dashboard.html',total_staff=total_staf,total_treks=total_treks,pending_staff=pnding_staff,total_bookings=total_bookings,total_users=total_users,recent_bookings=recent_bookings,staff=staff,admin=admin)
+    admin = AdventureUser.query.get(session.get("user_id"))
 
+    total_staff = AdventureUser.query.filter_by(rolee="staff").count()
+    total_users = AdventureUser.query.filter_by(rolee="user").count()
+    total_treks = Adventure_route.query.count()
+    total_bookings = AdventureBooking.query.count()
+
+    recent_bookings = AdventureBooking.query.order_by(
+        AdventureBooking.reserved_on.desc()
+    ).limit(5).all()
+
+    return render_template(
+        "admin_dashboard.html",
+        admin=admin,
+        total_staff=total_staff,
+        total_users=total_users,
+        total_treks=total_treks,
+        total_bookings=total_bookings,
+        recent_bookings=recent_bookings
+    )
+
+#user dashboard
 @app.route("/user_dashboard")
 def user_dashboard():
     #user login
@@ -320,29 +341,26 @@ def staff_dashboard():
     staff = AdventureUser.query.get(staff_id)
 
     # treks assigned by admin
-    assigned_treks = Adventure_route.query.filter_by(staf_fr_this_rout=staff_id).all()
-    # total assigned treks 
-    total_assigned_treks = len(assigned_treks) 
-    #total participants 
-    total_participants = 0 
-    for trek in assigned_treks: 
-        total_participants += len(trek.bookings) 
-   
-    #count close trek
-    closed_treks=0
-    for trek in assigned_treks: 
-        if trek.track_status == "Completed": 
-            closed_treks += 1
-    open_treks = len(assigned_treks) - closed_treks
+    all_treks = Adventure_route.query.filter_by(staf_fr_this_rout=staff_id).all()
+    assigned_treks = [trek for trek in all_treks if trek.track_status in ["Upcoming", "Ongoing"]]
+    #close trek
+    closed_tracks = [trek for trek in all_treks if trek.track_status == "Completed"]
+    
+    #count of each get update 
+    total_assigned_treks = len(assigned_treks)
+    total_participants = sum(len(trek.bookings) for trek in assigned_treks)
+    total_tracks = len(all_treks)    
+    closed_treks = len(closed_tracks)
 
 
     return render_template(
         "staff_dashboard.html",
         staff=staff,
         assigned_treks=assigned_treks,
+        closed_tracks=closed_tracks,
         total_assigned_treks=total_assigned_treks, 
         total_participants=total_participants, 
-        open_treks=open_treks, 
+        total_tracks=total_tracks, 
         closed_treks=closed_treks
     )
 
@@ -365,6 +383,36 @@ def edit_staff_profile():
         return redirect(url_for("staff_dashboard"))
     return render_template("edit_staff_profile.html",staff=staff)
 
+#staff can edit slots in manage trek
+@app.route("/staff_edit_trek/<int:trek_id>", methods=["GET", "POST"])
+def staff_edit_trek(trek_id):
+
+    if session.get("role") != "staff":
+        return redirect(url_for("login"))
+
+    trek = Adventure_route.query.get_or_404(trek_id)
+
+    # Staff can edit only their own trek
+    if trek.staf_fr_this_rout != session.get("user_id"):
+        return "Access Denied"
+
+    if request.method == "POST":
+
+        new_slots = int(request.form.get("capcity"))
+
+        booked = len(trek.bookings)
+
+        if new_slots < booked:
+            return "Slots cannot be less than booked participants."
+
+        trek.requested_slots = new_slots
+        trek.slot_request_status = "Pending"
+
+        db.session.commit()
+
+        return redirect(url_for("staff_dashboard"))
+
+    return render_template("staff_edit_trek.html", trek=trek)
 
 #route of current trek
 @app.route("/current_tracks")
@@ -425,12 +473,27 @@ def add_trek():
         rout_price = request.form.get("rout_price")
         capcity = request.form.get("capcity")
         remening_spots = request.form.get("remening_spots")
-        journey_date=request.form.get("journey_date")
         strt_trck_date = request.form.get( "strt_trck_date" )
         end_trck_date = request.form.get( "end_trck_date" )
         distnce = request.form.get("distnce")
         max_altitdu = request.form.get("max_altitdu")
 
+        strt_trck_date = datetime.strptime(strt_trck_date, "%Y-%m-%d").date()
+        end_trck_date = datetime.strptime(end_trck_date, "%Y-%m-%d").date()
+        if strt_trck_date < date.today():
+            return "can't register this date"
+
+        if end_trck_date < strt_trck_date:
+            return "End trek date can't before start trek"
+        #one staff can go in in trek
+        existing_trek = Adventure_route.query.filter(
+            Adventure_route.staf_fr_this_rout == staf_ref_id,
+            Adventure_route.strt_trck_date <= end_trck_date,
+            Adventure_route.end_trck_date >= strt_trck_date
+        ).first()
+
+        if existing_trek:
+            return "this staff is already busy with other track"
         new_route = Adventure_route(
             rout_name=rout_name,
             staf_fr_this_rout=staf_ref_id,
@@ -441,11 +504,10 @@ def add_trek():
             rout_price=rout_price,
             capcity=capcity,
             remening_spots=remening_spots,
-            journey_date=journey_date,
             distnce=distnce,
             max_altitdu=max_altitdu,
-            strt_trck_date=datetime.strptime( strt_trck_date, "%Y-%m-%d" ),
-            end_trck_date=datetime.strptime( end_trck_date, "%Y-%m-%d" ), 
+            strt_trck_date=strt_trck_date,
+            end_trck_date=end_trck_date,
              # default values
             track_status="Upcoming", 
             status_open_close="Open" 
@@ -453,16 +515,67 @@ def add_trek():
 
         db.session.add(new_route)
         db.session.commit()
-        #after save it go to table treking
-        return redirect(url_for("tracking_table"))
-    return render_template("add_trek.html", staff=stafs,admin_name=admin_name)
+        #after save it go to table booking
+        return redirect(url_for("booking_table"))
+    return render_template("add_trek.html", staff=stafs,admin_name=admin_name, today_date=date.today().strftime("%Y-%m-%d"))
+
+#user see their booking table
+@app.route("/user_booking_table")
+def user_booking_table():
+# check login
+    user_id = session.get("user_id")
+
+    if not user_id:
+        return redirect(url_for("login"))
+
+    # get current user
+    user = AdventureUser.query.get(user_id)
+
+    # get bookings of current user
+    bookings = AdventureBooking.query.filter_by(adv_usr_id=user_id).all()
+
+    return render_template(
+        "user_booking_table.html",
+        user=user,
+        bookings=bookings
+    )
+
+
+
+
 
 #tracking table
-@app.route("/tracking_table")
-def tracking_table():
+@app.route("/booking_table")
+def booking_table():
 
-    all_tracks = Adventure_route.query.order_by(Adventure_route.adv_rout_id.desc()).all()
-    return render_template("tracking_table.html",tracks=all_tracks)
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    admin = AdventureUser.query.get(session.get("user_id"))
+    search = request.args.get("search", "").strip()
+
+    if search:
+        bookings = AdventureBooking.query\
+            .join(AdventureBooking.user)\
+            .join(AdventureBooking.trek)\
+            .outerjoin(Adventure_route.staff)\
+            .filter(
+                (AdventureUser.usrname.ilike(f"%{search}%")) |
+                (Adventure_route.rout_name.ilike(f"%{search}%")) |
+                (Adventure_route.staff.has(
+                    AdventureUser.usrname.ilike(f"%{search}%")
+                ))
+            ).all()
+    else:
+        bookings = AdventureBooking.query.order_by(
+            AdventureBooking.reserved_on.desc()
+        ).all()
+
+    return render_template(
+        "booking_table.html",
+        bookings=bookings,
+        admin=admin
+    )
 
 #route for status change from open to close
 @app.route("/change_track_status/<int:track_id>/<string:new_status>")
@@ -480,8 +593,7 @@ def change_track_status(track_id, new_status):
         track.status_open_close = "Open"
 
     db.session.commit()
-
-    return redirect(url_for("tracking_table"))
+    return redirect(url_for("manage_trek"))
 
 @app.route('/manage_staff')
 def manage_staff():
@@ -511,8 +623,28 @@ def manage_staff():
         admin=admin
     )
 
-# MANAGE USERS
+#staf get reject by admin
+@app.route("/reject_staff/<int:staff_id>")
+def reject_staff(staff_id):
 
+    # get staff
+    staff = AdventureUser.query.get_or_404(staff_id)
+
+    #check is there any trek assign to 
+    assigned_trek = Adventure_route.query.filter_by(staf_fr_this_rout=staff.usr_ref_id).first()
+
+    if assigned_trek:
+        return "can't delete this staff directly first delete trek assigned to this staff"
+
+    # Blacklist the staff
+    staff.staf_satus = "Blacklisted"
+    staff.is_blacklsted = True
+
+    db.session.commit()
+
+    return redirect(url_for("manage_staff", tab="blacklisted"))
+
+# manage user by admin
 @app.route("/manage_users")
 def manage_users():
     # admin login check
@@ -542,17 +674,15 @@ def manage_users():
 def blacklist_user(user_id):
 
     user = AdventureUser.query.get_or_404(user_id)
+    # Check if this staff is assigned to any trek
+    if user.rolee == "staff":
+        assigned_trek = Adventure_route.query.filter_by(staf_fr_this_rout=user.usr_ref_id).first()
+        if assigned_trek:
+            return "trek is assigned to this staff first delete trek then u can block this staff"
 
     user.is_blacklsted = True
-
     db.session.commit()
-
-    return redirect(
-        url_for(
-            "manage_users",
-            tab="blacklisted"
-        )
-    )
+    return redirect(url_for("manage_users",tab="blacklisted"))
 
 
 
@@ -651,15 +781,6 @@ def approve_staff(staff_id):
     db.session.commit()
     return redirect(url_for('manage_staff'))
 
-# staf get reject by admin
-@app.route('/reject_staff/<int:staff_id>')
-def reject_staff(staff_id):
-    staff = AdventureUser.query.get_or_404(staff_id)
-    staff.staf_satus = "Blacklisted"
-    staff.is_blacklsted = True
-    staff.is_it_actve = "Reject"
-    db.session.commit()
-    return redirect(url_for('manage_staff'))
 
 # trek manage by admin 
 @app.route('/manage_trek')
@@ -668,8 +789,19 @@ def manage_trek():
     admin_id = session.get("user_id")
     admin = AdventureUser.query.get(admin_id)
     # get all treks from database
-    treks = Adventure_route.query.all()
-    return render_template('manage_trek.html',treks=treks,admin=admin)
+    search = request.args.get("search", "").strip()
+    if search:
+        treks = Adventure_route.query.filter(
+                (Adventure_route.rout_name.ilike(f"%{search}%")) |
+                (Adventure_route.destination.ilike(f"%{search}%")) |
+                (AdventureUser.usrname.ilike(f"%{search}%"))
+        ).all()
+    else:
+        treks = Adventure_route.query.all()
+    
+    pending_requests = Adventure_route.query.filter_by(slot_request_status="Pending").all()
+        
+    return render_template('manage_trek.html',treks=treks,admin=admin,pending_requests=pending_requests)
 
 
 
@@ -692,15 +824,33 @@ def edit_trek(trek_id):
         )
 
         db.session.commit()
-
         return redirect(url_for("manage_trek"))
-
     return render_template(
         "edit_trek.html",
         trek=trek
     )
 
+#aprove route if staff edit trek slot
+@app.route("/approve_slot_request/<int:trek_id>")
+def approve_slot_request(trek_id):
+    trek = Adventure_route.query.get_or_404(trek_id)
+    trek.capcity = trek.requested_slots
+    booked = len(trek.bookings)
+    trek.remening_spots = trek.capcity - booked
+    trek.slot_request_status = "Approved"
+    trek.requested_slots = None
+    db.session.commit()
+    return redirect(url_for("manage_trek"))
 
+
+#reject route if staff edit trek slot
+@app.route("/reject_slot_request/<int:trek_id>")
+def reject_slot_request(trek_id):
+    trek = Adventure_route.query.get_or_404(trek_id)
+    trek.slot_request_status = "Rejected"
+    trek.requested_slots = None
+    db.session.commit()
+    return redirect(url_for("manage_trek"))
 
 #deleted trek by admin 
 @app.route("/delete_trek/<int:trek_id>")
@@ -775,7 +925,7 @@ if __name__ == "__main__":
             admin= AdventureUser(
                 usrname="Admin",
                 usr_mail="admin@Adventure.com",
-                pasword= generate_password_hash("admin123"),
+                pasword= generate_password_hash("a123"),
                 rolee="admin",
                 county ="india",
                 state_of_usr="Bihar",

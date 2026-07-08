@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Edit Trek</h2>
+
+<form method="POST">
+
+    <p><b>Trek:</b> {{ trek.rout_name }}</p>
+
+    <label>Total Slots</label><br>
+
+    <input
+        type="number"
+        name="capcity"
+        value="{{ trek.capcity }}"
+        required>
+
+    <br><br>
+
+    <button type="submit">
+        Send Request
+    </button>
+
+</form>
+
+{% endblock %}

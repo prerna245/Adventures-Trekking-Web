@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial, sans-serif;
+    }
+
+    body{
+        background:#f4f4f4;
+        margin: 0;
+    }
+
+    .cont-of-elem{
+        display:flex;
+        min-height:100vh;
+    }
+
+    .admin-sid-bar{
+        width:240px;
+        background:rgb(91,132,154);
+        border-right:1px solid #070404;
+        padding:20px;
+    }
+
+    .head{
+        font-size:22px;
+        font-weight:bold;
+        margin-bottom:30px;
+        color:#111827;
+    }
+
+    .sid-bar-element{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+    }
+
+    .sid-bar-element a{
+        text-decoration:none;
+        padding:14px;
+        border-radius:10px;
+        color:#0a0c0c;
+        font-weight:600;
+        transition:.3s;
+    }
+
+    .sid-bar-element a:hover{
+        background:#12385b;
+        color:white;
+    }
+
+    .active-link{
+        background:#12385b;
+        color:white !important;
+    }
+/* main context*/
+    .main-box{
+        flex:1;
+        padding:25px;
+    }
+    .search-box{
+        margin-bottom:20px;
+    }
+
+    .search-box input{
+        padding:10px;
+        width:300px;
+        border-radius:6px;
+        border:1px solid #b6aeae;
+    }
+
+    .search-box button{
+        padding:10px 18px;
+        border:none;
+        border-radius:6px;
+        background:#12385b;
+        color:rgb(228, 223, 223);
+        cursor:pointer;
+    }
+    .box-1{
+        background:rgb(24,74,83);
+        padding:25px;
+        border-radius:14px;
+    }
+
+    .boking-content{
+        background:rgb(91,132,154);
+        padding:25px;
+        border-radius:14px;
+        border:1px solid #0c6170;
+    }
+
+    .track-head{
+        margin-bottom:25px;
+        color:#222;
+        background: #30626c;
+        padding: 14px;
+        border-radius: 3px;
+        border: #06445a;
+    }
+
+    table{
+        width:100%;
+        border-collapse:collapse;
+        background:rgb(91, 132, 154);
+        box-shadow:0 0 10px rgba(0,0,0,0.08);
+    }
+
+    th{
+        background:#12385b;
+        color:rgb(228, 218, 218);
+        padding:14px;
+        font-size:15px;
+    }
+
+    td{
+        padding:14px;
+        border-bottom:1px solid #ddd;
+        text-align:center;
+        font-size:14px;
+    }
+
+    tr:hover{
+        background:#486d71;
+    }
+
+    .open{
+        color:rgb(53, 181, 53);
+        font-weight:bold;
+    }
+
+    .close{
+        color:rgb(199, 55, 55);
+        font-weight:bold;
+    }
+
+    .upcoming{
+        color:#0d275f;
+        font-weight:bold;
+    }
+
+    .ongoing{
+        color:rgb(162, 120, 41);
+        font-weight:bold;
+    }
+
+    .completed{
+        color:rgb(63, 119, 63);
+        font-weight:bold;
+    }
+</style>
+<div class="cont-of-elem">
+    <div class="admin-sid-bar">
+        <div class="head">Adventure Admin</div>
+        <div class="sid-bar-element">
+            <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('add_trek') }}"> Create Treks</a>
+            <a href="{{ url_for('manage_staff') }}">Manage Staff</a>
+            <a href="{{ url_for('manage_users') }}">Manage Users</a>
+            <a href="{{ url_for('manage_trek') }}">Manage Trek</a>
+            <a href="{{ url_for('booking_table') }}"class="active-link">Booking Table</a>            <a href="#">Settings</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+    <div class="main-box">
+        <div class="track-head">
+            <h1>All Bookings & History</h1>
+        </div>
+        <form method="GET" class="search-box" style="margin-bottom:20px;">
+            <input type="text"
+                name="search"
+                placeholder="Search user name,trek name,staff name"
+                value="{{ request.args.get('search','') }}">
+            <button class="btn">Search</button>
+        </form>
+        <table>
+        <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>User</th>
+                <th>User ID</th>
+                <th>Staff</th>
+                <th>Trek</th>
+                <th>Trek ID</th>
+                <th>Location</th>
+                <th>Difficulty</th>
+                <th>Trek Status</th>
+                <th>Booking Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for booking in bookings %}
+                <tr>
+                <td>{{ booking.boking_id }}</td>
+                <td>{{ booking.user.usrname }}</td>
+                <td>{{ booking.user.usr_ref_id }}</td>
+                <td>
+                    {% if booking.trek.staff %}
+                        {{ booking.trek.staff.usrname }}
+                    {% else %}
+                        Not Assigned
+                    {% endif %}
+                </td>
+                <td>{{ booking.trek.rout_name }}</td>
+                <td>{{ booking.trek.adv_rout_id }}</td>
+                <td>{{ booking.trek.destination }}</td>
+                <td>{{ booking.trek.difficulty_level }}</td>
+                <td>
+                    {% if booking.trek.track_status=="Upcoming" %}
+                    <span class="upcoming">Upcoming</span>
+                    {% elif booking.trek.track_status=="Ongoing" %}
+                    <span class="ongoing">Ongoing</span>
+                    {% else %}
+                    <span class="completed">Completed</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if booking.trek.status_open_close=="Open" %}
+                    <span class="open">Open</span>
+                    {% else %}
+                    <span class="close">Close</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+
+

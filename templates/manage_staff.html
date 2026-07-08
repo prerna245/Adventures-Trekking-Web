@@ -59,14 +59,11 @@ body{
     background: #12385b;
     color:rgb(201, 192, 192) !important;
 }
-
-
 /* main */
 .main-box{
     flex:1;
     padding:25px;
 }
-
 .top-head{
     background:rgb(91, 132, 154);
     padding:18px 25px;
@@ -77,16 +74,13 @@ body{
     margin-bottom:25px;
     border:1px solid #eee;
 }
-
 .top-head h1{
     font-size:24px;
     color:#111827;
 }
-
 .name-of-admin{
     font-weight:bold;
 }
-
 /* content */
 .staff-box{
     background:rgb(91, 132, 154);
@@ -104,8 +98,8 @@ body{
     font-weight:bold;
     background:#12385b;
     color:#cbccd0;
+    margin-top: 20px;
 }
-
 .tabs a:hover{
     background:#4e667d;
     color:rgb(219, 212, 212);
@@ -117,7 +111,6 @@ body{
 }
 
 /* table */
-
 table{
     width:100%;
     border-collapse:collapse;
@@ -186,72 +179,27 @@ table td{
             <a href="{{ url_for('manage_staff') }}" class="active-link">Manage Staff</a>
             <a href="{{ url_for('user_dashboard') }}">Manage Users</a>
             <a href="{{ url_for('manage_trek') }}">Manage Treck</a>
-            <a href="{{ url_for('tracking_table') }}">Track Table</a>
+            <a href="{{ url_for('booking_table') }}">Booking Table</a>
             <a href="#">Settings</a>
             <a href="{{ url_for('logout') }}">Logout</a>
         </div>
     </div>
     <!-- main -->
     <div class="main-box">
-        <!-- top navbar -->
-        <div class="top-head">
-<div class="container-box">
-    <div class="sidebar">
-        <h2>Adventure Admin</h2>
-        <div class="sidebar-menu">
-            <a href="{{ url_for('admin_dashboard') }}">
-                Dashboard
-            </a>
-            <a href="{{ url_for('user_dashboard') }}">
-                Manage Users
-            </a>
-            <a href="{{ url_for('manage_staff') }}" class="active-link">
-                Manage Staff
-            </a>
-            <a href="{{ url_for('manage_staff') }}">
-                Pending Staff
-            </a>
-            <a href="{{ url_for('add_routes') }}">
-                Manage Treks
-            </a>
-            <a href="{{ url_for('add_routes') }}">
-                Create Trek
-            </a>
-            <a href="#">
-                Bookings
-            </a>
-            <a href="#">
-                Reports
-            </a>
-            <a href="#">
-                Settings
-            </a>
-            <a  ref="{{ url_for('logout') }}">
-                Logout
-            </a>
-        </div>
-    </div>
-
-    <div class="main-content">
         <!-- topbar -->
-        <div class="topbar">
->>>>>>> 29d6cdfe4875817f2500115f14a113bb3b6f9800
+        <div class="top-head">
             <h1>Trekking Management Application</h1>
             <div class="name-of-admin">
                  {{ admin.usrname }}
             </div>
         </div>
-<<<<<<< HEAD
         <!-- manage staff -->
-=======
-
->>>>>>> 29d6cdfe4875817f2500115f14a113bb3b6f9800
         <div class="staff-box">
             <h2 style="margin-bottom:20px;">
                 Staff Requests
             </h2>
-    </div>
-    <!-- tabs -->
+        </div>
+        <!-- tabs -->
     <div class="tabs">
         <a href="{{ url_for('manage_staff', tab='pending') }}"
         class="{% if active_tab == 'pending' %}active-tab{% endif %}">

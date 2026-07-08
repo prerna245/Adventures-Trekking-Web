@@ -156,7 +156,7 @@
             <a href="{{ url_for('manage_staff') }}">Manage Staff</a>
             <a href="{{ url_for('manage_users') }}">Manage Users</a>
             <a href="{{ url_for('manage_trek') }}">Manage Trek</a>
-            <a href="{{ url_for('tracking_table') }}">Track Table</a>
+            <a href="{{ url_for('booking_table') }}">Booking Table</a>
             <a href="#">Settings</a>
             <a href="{{ url_for('logout') }}">Logout</a>
     </div>
@@ -178,19 +178,19 @@
                 <!-- form for the treakking  -->
                 <div class="form-group">
                     <label>Trek Name</label>
-                    <input type="text" name="rout_name">
+                    <input type="text" name="rout_name"required>
                 </div>
                 <div class="form-group">
                     <label>Destination</label>
-                    <input type="text" name="destination">
+                    <input type="text" name="destination"required>
                 </div>
                 <div class="form-group">
                     <label>Start Trek Date</label>
-                    <input type="date" name="strt_trck_date">
+                    <input type="date" name="strt_trck_date" min="{{ today_date }}" required>
                 </div>
                 <div class="form-group">
                     <label>Difficulty Level</label>
-                    <select name="difficulty_level">
+                    <select name="difficulty_level"required>
                         <option>Easy</option>
                         <option>Moderate</option>
                         <option>Hard</option>
@@ -198,17 +198,17 @@
                 </div>
                 <div class="form-group">
                     <label>End Trek Date</label>
-                    <input type="date" name="end_trck_date">
+                    <input type="date" name="end_trck_date" min="{{ today_date }}" required>
                 </div>
                 <div class="form-group">
                     <label>Total Days</label>
-                    <input type="number" name="total_days_are">
+                    <input type="number" name="total_days_are"required>
                 </div>
                 <div class="form-group">
                     <label>Select Staff</label>
                     <select name="staf_ref_id">
                         {% for staf in staff %}
-                        <option value="{{ staf.usr_ref_id }}">
+                        <option value="{{ staf.usr_ref_id }}"required>
                             {{ staf.usrname }}
                         </option>
                         {% endfor %}
@@ -216,19 +216,19 @@
                 </div>
                 <div class="form-group">
                     <label>Capacity</label>
-                    <input type="number" name="capcity">
+                    <input type="number" name="capcity"required>
                 </div>
                 <div class="form-group">
                     <label>Remaining Spots</label>
-                    <input type="number" name="remening_spots">
+                    <input type="number" name="remening_spots"required>
                 </div>
                 <div class="form-group">
                     <label>Route Price</label>
-                    <input type="number" name="rout_price">
+                    <input type="number" name="rout_price"required>
                 </div>
                 <div class="form-group">
                     <label>Distance (KM)</label>
-                    <input type="number" name="distnce">
+                    <input type="number" name="distnce"required>
                 </div>
                 <div class="form-group">
                     <label>Route Type</label>
@@ -241,7 +241,7 @@
                 </div>
                 <div class="form-group">
                     <label>Max Altitude</label>
-                    <input type="number" name="max_altitdu">
+                    <input type="number" name="max_altitdu"required>
                 </div>
                 <!-- save and cancle buttons -->
                 <div class="button-box">

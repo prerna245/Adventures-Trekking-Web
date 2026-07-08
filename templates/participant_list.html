@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial,sans-serif;
+    }
+
+    body{
+        background:#939eb3;
+    }
+
+    .container{
+        display:flex;
+        min-height:100vh;
+    }
+
+    /* Sidebar */
+
+    .sidebar{
+        width:240px;
+        background:rgb(91,132,154);
+        padding:20px;
+    }
+
+    .sidebar h2{
+        margin-bottom:30px;
+    }
+
+    .sidebar a{
+        display:block;
+        text-decoration:none;
+        color:black;
+        padding:14px;
+        border-radius:10px;
+        margin-bottom:10px;
+        font-weight:bold;
+    }
+
+    .sidebar a:hover{
+        background:#12385b;
+        color:white;
+    }
+
+    .active{
+        background:#12385b;
+        color:white!important;
+    }
+
+    /* Main */
+
+    .main{
+        flex:1;
+        padding:30px;
+    }
+
+    .topbar{
+        background:rgb(91,132,154);
+        padding:18px;
+        border-radius:10px;
+        display:flex;
+        justify-content:space-between;
+        margin-bottom:30px;
+    }
+
+    .table-box{
+        background:rgb(91,132,154);
+        padding:20px;
+        border-radius:10px;
+    }
+
+    table{
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    th{
+        background:#12385b;
+        color:white;
+        padding:15px;
+    }
+
+    td{
+        padding:15px;
+        border-bottom:1px solid white;
+    }
+
+    .btn{
+        padding:8px 15px;
+        border-radius:6px;
+        color:white;
+        text-decoration:none;
+    }
+
+    .blacklist{
+        background:#b22222;
+    }
+
+    .back{
+        background:#0b566d;
+        margin-bottom:20px;
+        display:inline-block;
+    }
+
+</style>
+
+<div class="container">
+
+    <div class="sidebar">
+
+    <h2>Adventure Admin</h2>
+
+    <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+
+    <a href="{{ url_for('add_trek') }}">Create Treks</a>
+
+    <a href="{{ url_for('manage_staff') }}">Manage Staff</a>
+
+    <a href="{{ url_for('manage_users') }}">Manage Users</a>
+
+    <a href="{{ url_for('manage_trek') }}" class="active">Manage Trek</a>
+
+    <a href="{{ url_for('booking_table') }}">Booking Table</a>
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+    </div>
+
+<div class="main">
+
+<div class="topbar">
+
+<h2>Participants - {{ trek.rout_name }}</h2>
+
+<div>{{ admin.usrname }}</div>
+
+</div>
+
+<a class="btn back"
+href="{{ url_for('manage_trek') }}">
+Back
+</a>
+
+<div class="table-box">
+
+<table>
+
+<tr>
+
+<th>Username</th>
+
+<th>Email</th>
+
+<th>Phone</th>
+
+<th>Country</th>
+
+<th>Action</th>
+
+</tr>
+
+{% for booking in bookings %}
+
+<tr>
+
+<td>{{ booking.user.usrname }}</td>
+
+<td>{{ booking.user.usr_mail }}</td>
+
+<td>{{ booking.user.phone_no }}</td>
+
+<td>{{ booking.user.country }}</td>
+
+<td>
+
+<a class="btn blacklist"
+href="{{ url_for('blacklist_user',
+user_id=booking.user.usr_ref_id) }}">
+
+Blacklist
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

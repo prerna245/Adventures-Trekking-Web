@@ -12,13 +12,11 @@
             background:#9198a4;
             padding:0px;
         }
-        /* ADMIN LAYOUT */
-
+        /* admin side bar */
         .cont-of-elem{
             display:flex;
             min-height:80vh;
         }
-
         .admin-sid-bar{
             width:240px;
             background:rgb(69, 106, 126);
@@ -27,7 +25,6 @@
             margin-top: 30px;
             margin-bottom: 30px;
         }
-
         .head{
             font-size:22px;
             font-weight:bold;
@@ -53,7 +50,6 @@
             font-weight:600;
             transition:0.3s;
         }
-
         .sid-bar-element a:hover{
             background:#12385b;
             color:white;
@@ -62,12 +58,11 @@
             background:#12385b;
             color:white !important;
         }
-
+        /*main content here*/
         .main-content{
             flex:1;
             padding:25px;
         }
-
         .top-head{
             background:rgb(69, 106, 126);
             padding:18px 25px;
@@ -108,8 +103,35 @@
         .top-bar h2{
             color:#222;
         }
+        .search-box{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
 
-        .add-btn{
+        .search-box input{
+            width:320px;
+            padding:10px 15px;
+            border:1px solid #ccc;
+            border-radius:8px;
+            outline:none;
+        }
+
+        .search-butn{
+            background:#12385b;
+            color:white;
+            border:none;
+            padding:10px 18px;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:bold;
+        }
+
+        .search-butn:hover{
+            background:#0b2d4b;
+        }
+
+        .add-butn{
             background:#1e5866;
             color:rgb(11, 1, 1);
             padding:10px 18px;
@@ -117,15 +139,11 @@
             text-decoration:none;
             font-weight:bold;
         }
-
-        .search-box input{
-            padding:10px;
-            width:280px;
-            border:1px solid #a9a4a4;
-            border-radius:6px;
-            outline:none;
+        .search-box{
+            display:flex;
+            align-items:center;
+            gap:10px;
         }
-
         table{
             width:100%;
             border-collapse:collapse;
@@ -173,7 +191,7 @@
             font-weight:bold;
         }
 
-        .btn{
+        .butn{
             padding:7px 12px;
             border-radius:5px;
             text-decoration:none;
@@ -183,27 +201,27 @@
             margin:2px;
         }
 
-        .edit-btn{
+        .edit-butn{
             background:#a17830;
         }
 
-        .delete-btn{
+        .delete-butn{
             background:#781c1c;
         }
 
-        .details-btn{
+        .details-butn{
             background:#5a7bac;
         }
 
-        .upcoming-btn{
+        .upcoming-butn{
             background:#658e4b;
         }
 
-        .ongoing-btn{
+        .ongoing-butn{
             background:#785033;
         }
 
-        .completed-btn{
+        .completed-butn{
             background:#325a0f;
         }
 
@@ -222,7 +240,7 @@
             <a href="{{ url_for('manage_staff') }}">Manage Staff</a>
             <a href="{{ url_for('manage_users') }}">Manage Users</a>
             <a href="{{ url_for('manage_trek') }}" class="active-link">Manage Trek</a>
-            <a href="{{ url_for('tracking_table') }}">Track Table</a>
+            <a href="{{ url_for('booking_table') }}">Booking Table</a>
             <a href="#">Settings</a>
             <a href="{{ url_for('logout') }}">Logout</a>
         </div>
@@ -241,14 +259,14 @@
         <div class="detail-box">
             <div class="top-bar">
                 <h2>Manage Treks</h2>
-                <div class="search-box">
+                <form method="GET" action="{{ url_for('manage_trek') }}" class="search-box">
                     <input type="text"
-                           id="searchInput"
-                           placeholder="Search trek or staff..."
-                           onkeyup="searchTrek()">
-                </div>
-
-                <a href="{{ url_for('add_trek') }}"class="add-btn">
+                        name="search"
+                        placeholder="Search trek or destination or trek..."
+                        value="{{ request.args.get('search', '') }}">
+                    <button type="submit" class="search-butn">Search</button>
+                </form>
+                <a href="{{ url_for('add_trek') }}"class="add-butn">
                     + Add New Trek
                 </a>
             </div>
@@ -258,15 +276,15 @@
                     <th>ID</th>
                     <th>Trek Name</th>
                     <th>Destination</th>
-                    <th>Staff_Id</th>
+                    <th>Staff Name</th>
                     <th>Difficulty</th>
                     <th>Start Date</th>
                     <th>End Date</th>
+                    <th>Participants</th>
                     <th>Slots</th>
-                    <th>Track Status</th>
-                    <th>Status</th>
-                    <th>Start Track</th>
-                    <th>Details</th>
+                    <th>Track status</th>
+                    <th>Track setting</th>
+                    <th>Booking status</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -276,64 +294,64 @@
                     <td>{{ trek.adv_rout_id }}</td>
                     <td>{{ trek.rout_name }}</td>
                     <td>{{ trek.destination }}</td>
-                    <td>{{  trek.staf_fr_this_rout }}</td>
+                    <td>{{ trek.staff.usrname if trek.staff else "Not Assigned" }}
+                        {% if trek.staff %}
+                        <a href="{{ url_for('staff_profile',
+                        staff_id=trek.staff.usr_ref_id) }}"
+                        class="butn details-butn">
+                            View detail
+                        </a>
+                        {% endif %}
+                    </td>
                     <td>{{ trek.difficulty_level }}</td>
                     <td>{{ trek.strt_trck_date }}</td>
                     <td>{{ trek.end_trck_date }}</td>
-                    <td>{{ trek.remening_spots }}/{{ trek.capcity }}</td>
-                    <td>{% if trek.track_status == "Upcoming" %}
-                        <span class="upcoming">Upcoming</span>
-                        {% elif trek.track_status == "Ongoing" %}
-                            <span class="ongoing">Ongoing
-                        {% else %}
-                            <span class="completed">Completed</span>
-                        {% endif %}
+                    <td>{{ trek.bookings|length }}
+                        <a href="{{ url_for('participant_list',
+                        trek_id=trek.adv_rout_id) }}"
+                        class="butn details-butn">
+                            View details
+                        </a>
                     </td>
-                    <td>
-                        {% if trek.status_open_close == "Open" %}
-                            <span class="open">Open</span>
-                        {% else %}
-
-                            <span class="closed">Close</span>
-                        {% endif %}
-                    </td>
+                    <td>{{ trek.capcity }}</td>
+                    <td>{{ trek.track_status }}</td>
                     <td>
                         <a href="{{ url_for('change_track_status',
                             track_id=trek.adv_rout_id,
                             new_status='Upcoming') }}"
-                           class="btn upcoming-btn">
+                            class="butn upcoming-butn">
                             Upcoming
                         </a>
+
                         <a href="{{ url_for('change_track_status',
                             track_id=trek.adv_rout_id,
                             new_status='Ongoing') }}"
-                           class="btn ongoing-btn">
+                            class="butn ongoing-butn">
                             Ongoing
                         </a>
+
                         <a href="{{ url_for('change_track_status',
                             track_id=trek.adv_rout_id,
                             new_status='Completed') }}"
-                           class="btn completed-btn">
-                            Complete
+                            class="butn completed-butn">
+                            Completed
                         </a>
                     </td>
+                    <td>{{ trek.status_open_close }}</td>                                       
                     <td>
-                        <a href="{{ url_for('trek_details',
-                            trek_id=trek.adv_rout_id) }}"
-                           class="btn details-btn">
-                            View Details
+                        <a href="{{ url_for('booking_table') }}"
+                        class="butn details-butn">
+                            View trek
                         </a>
-                    </td>
-                    <td>
                         <a href="{{ url_for('edit_trek',
-                            trek_id=trek.adv_rout_id) }}"
-                           class="btn edit-btn">
+                        trek_id=trek.adv_rout_id) }}"
+                        class="butn edit-butn">
                             Edit
                         </a>
                         <a href="{{ url_for('delete_trek',
-                            trek_id=trek.adv_rout_id) }}"
-                           class="btn delete-btn"
-                           onclick="return confirm('Delete this trek?')">
+                        trek_id=trek.adv_rout_id) }}"
+                        class="butn delete-butn"
+                        onclick="return confirm('want to delete trek? All get deleted')">
                             Delete
                         </a>
                     </td>

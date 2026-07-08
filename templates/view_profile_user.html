@@ -4,8 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+        body{
+            background:#939eb3;
+        }
+        .main-container{
+            width:60%;
+            margin:40px auto;
+        }
+        .form-box{
+            background:rgb(91, 132, 154);
+            padding:30px;
+            border-radius:14px;
+            border:1px solid #215654;
+        }
+        .form-box h2{
+            margin-bottom:25px;
+            color:#111827;
+        }
+        .form-group{
+            margin-bottom:20px;
+        }
+        .form-group label{
+            display:block;
+            margin-bottom:8px;
+            font-weight:bold;
+        }
+        .form-group input{
+            width:100%;
+            padding:12px;
+            border:1px solid #d1bebe;
+            border-radius:8px;
+            font-size:15px;
+        }
+        
+        .form-group select{
+            width:100%;
+            padding:12px;
+            border:1px solid #d1bebe;
+            border-radius:8px;
+            font-size:15px;
+            background:white;
+        }
+
+
+        .btn-box{
+            display:flex;
+            gap:15px;
+            margin-top:25px;
+        }
+        .save-btn{
+            padding:12px 22px;
+            border:none;
+            background:#12385b;
+            color:rgb(228, 219, 219);
+            border-radius:8px;
+            font-size:15px;
+            cursor:pointer;
+            font-weight:bold;
+        }
+        .save-btn:hover{
+            background:#12385b;
+        }
+        .back-btn{
+            padding:12px 22px;
+            background:#12385b;
+            color:white;
+            text-decoration:none;
+            border-radius:8px;
+            font-weight:bold;
+        }
+        .back-btn:hover{
+            background:#26547d;
+        }
+    </style>
 </head>
 <body>
-    
+    <div class="main-container">
+        <div class="form-box">
+            <h2>Edit Profile</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text"name="usrname"value="{{ user.usrname }}"required></div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email"name="usr_mail"value="{{ user.usr_mail }}"required></div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text"name="phone_no"value="{{ user.phone_no }}"></div>
+                <div class="form-group"> 
+                    <label>Gender</label> 
+                    <select name="gender" class="gender-select"> 
+                        <option value="">Select gender</option> 
+                        <option value="Male" {% if user.gender == "Male" %} selected {% endif %} > Male </option> 
+                        <option value="Female" {% if user.gender == "Female" %} selected {% endif %} > Female </option> 
+                        <option value="Other" {% if user.gender == "Other" %} selected {% endif %} > Other </option> 
+                    </select> 
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text"name="city_of_usr"value="{{ user.city_of_usr }}">
+                </div>
+                <div class="form-group">
+                    <label>Country</label>
+                    <input type="text"name="county"value="{{ user.county }}">
+                </div>
+                <div class="btn-box">
+                    <button type="submit"class="save-btn">Save Changes</button>
+                    <a href="{{ url_for('view_profile_user') }}"class="back-btn">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

@@ -59,9 +59,6 @@
             <li><a href="{{ url_for('index') }}">Home</a></li>
             <!--before login-->
             {% if not session.get('user_id') %}
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Services</a></li>
-                <li><a href="#">Contact</a></li>
                 <li><a href="{{ url_for('login') }}">Login</a></li>
                 <li><a href="{{ url_for('register') }}">Register</a></li>
             {% endif %}
