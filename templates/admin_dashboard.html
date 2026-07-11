@@ -52,14 +52,14 @@
         padding:25px;
     }
     .top-head{
-        background:rgb(91, 132, 154);
-        padding:18px 300px;
+        background:rgb(91,132,154);
+        padding:18px 25px;
         border-radius:12px;
         display:flex;
         justify-content:space-between;
         align-items:center;
         margin-bottom:25px;
-        margin-left: 40px;
+        margin-left:25px;
         border:1px solid #d4d3d3;
     }
     .top-head h1{
@@ -67,14 +67,13 @@
         color:#111827;
         margin-right: 0px;
     }
-
     /*admin css*/
     .name-of-admin{
         font-weight: bold;
         font-size: 16px;
         margin-left: 0px;
     }
-    /* admin dashbord content in boxex*/
+    /* admin dashbord content*/
     .admin-dashbord-box{
         display:grid;
         grid-template-columns:repeat(4,1fr);
@@ -124,8 +123,8 @@
         padding:15px;
         border-top:1px solid #07444e;
     }
-    /* status it show like pending approvr */
-    .status-booked{
+    /* status it show like pending  */
+    .status-book{
         color:rgb(2, 53, 2);
         font-weight:bold;
     }
@@ -149,7 +148,6 @@
             <a href="{{ url_for('manage_users') }}">Manage Users</a>
             <a href="{{ url_for('manage_trek') }}">Manage Trek</a>
             <a href="{{ url_for('booking_table') }}">Booking Table</a>
-            <a href="#">Settings</a>
             <a href="{{ url_for('logout') }}">Logout</a>
         </div>
     </div>
@@ -159,24 +157,20 @@
             <h1>Adventrus Trekking Management Application</h1>
             <div class="name-of-admin">{{ admin.usrname }}</div>           
         </div>
-    
         <!-- admin dashbord content in boxex-->
         <div class="admin-dashbord-box">
             <div class="box-1">
                 <h3>Total Treks</h3>
                 <h1>{{ total_treks }}</h1>
             </div>
-
             <div class="box-1">
                 <h3>Total Users</h3>
                 <h1>{{ total_users }}</h1>
             </div>
-
             <div class="box-1">
                 <h3>Total Staff</h3>
                 <h1>{{ total_staff }}</h1>
             </div>
-
             <div class="box-1">
                 <h3>Total Bookings</h3>
                 <h1>{{ total_bookings }}</h1>
@@ -205,7 +199,7 @@
                         <td>
                             <!--status it show like pending approvr-->
                             {% if booking.booking_stat == "Booked" %}
-                                <span class="status-booked">
+                                <span class="status-book">
                                     {{ booking.booking_stat }}
                                 </span>
                             {% elif booking.booking_stat == "Pending" %}
