@@ -10,7 +10,7 @@
     body{
         background:#bdb2b2;
     }
-    .main-container{
+    .main-content{
         display:flex;
         min-height:100vh;
     }
@@ -50,28 +50,10 @@
         background:#12385b; 
         color:white !important; }
     /* contents */
-    .all-content{
+
+    .main-content{
         flex:1;
-        padding:20px;
-    }
-    /* head after nav */
-    .top-bar{
-        background:rgb(91, 132, 154);
-        padding:18px 25px;
-        border-radius:12px;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        margin-bottom:20px;
-        border:1px solid #0c616e;
-    }
-    .top-bar h1{
-        font-size:24px;
-        color:#06090f;
-    }
-    .user-name{
-        font-weight:bold;
-        font-size: 16px;
+        padding:30px;
     }
     /* 1st box and 2nd box available trek and my boking */
     .two-box{
@@ -120,59 +102,80 @@
         color:rgb(180, 128, 32);
         font-weight:bold;
     }
-    .cancelled{
+    .cancel{
         color:rgb(148, 35, 35);
         font-weight:bold;
     }
 </style>
-<div class="main-container">
-    <!-- sid bar of user -->
+<div class="main-content">
+    <!-- side bar of user -->
     <div class="side-bar">
         <h2>Adventrues User</h2>
         <div class="side-bar-links">
             <a href="{{ url_for('user_dashboard') }}">Dashboard</a>
-            <a href="{{ url_for('browse_treks') }}">Browse Treks</a>
+            <a href="{{ url_for('my_profile') }}">My profile</a>
             <a href="{{ url_for('user_booking_table') }}"class="active-link">My Bookings</a>
-            <a href="{{ url_for('trek_history') }}">History</a>
-            <a href="{{ url_for('view_profile_user') }}">Profile</a>
+            <a href="{{ url_for('all_tracks') }}">All treks</a>
+            <a href="{{ url_for('user_current_tracks') }}">Current Tracks</a>
+            <a href="{{ url_for('user_trek_history') }}">My Trek History</a>
             <a href="{{ url_for('logout') }}">Logout</a>
         </div>
     </div>
-    <!--table of my booking section -->
-    <div class="two-box">
-        <h2>My Bookings</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Trek Name</th>
-                    <th>Booking Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for booking in bookings %}                        
-                <tr>
-                    <td>{{ booking.trek.rout_name }}</td>
-                    <td>{{ booking.reserved_on.strftime('%d %b %Y') }}</td>
-                    <td>
-                        {% if booking.booking_stat == "Booked" %}
-                            <span class="booked">
-                                {{ booking.booking_stat }}
-                            </span>
-                        {% elif booking.booking_stat == "Pending" %}
-                            <span class="pending">
-                                {{ booking.booking_stat }}
-                            </span>
-                        {% else %}
-                            <span class="cancelled">
-                                {{ booking.booking_stat }}
-                            </span>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="main-content">
+        <!--table of my booking sec-->
+        <div class="two-box">
+            <h2>My Bookings</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trek Name</th>
+                        <th>Location</th>
+                        <th>Difficulty</th>
+                        <th>Staff Name</th>
+                        <th>Total Days</th>
+                        <th>Booking Date</th>
+                        <th>Booking Status</th>
+                        <th>Trek Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for booking in bookings %}                        
+                    <tr>
+                        <td>{{ booking.trek.rout_name }}</td>
+                        <td>{{ booking.trek.destination }}</td>
+                        <td>{{ booking.trek.difficulty_level }}</td>
+                        <td>
+                            {% if booking.trek.staff %}
+                                {{ booking.trek.staff.usrname }}
+                            {% else %}
+                                Not Assigned
+                            {% endif %}
+                        </td>
+                        <td>{{ booking.trek.total_days_are }} Days</td>
+                        <td>{{ booking.reserved_on.strftime('%d %b %Y') }}</td>
+                        <td>
+                            {% if booking.booking_stat == "Booked" %}
+                                <span class="booked">Booked</span>
+                            {% elif booking.booking_stat == "Pending" %}
+                                <span class="pending">Pending</span>
+                            {% else %}
+                                <span class="cancel">{{ booking.booking_stat }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if booking.trek.track_status == "Upcoming" %}
+                                <span class="pending">Upcoming</span>
+                            {% elif booking.trek.track_status == "Ongoing" %}
+                                <span class="booked">Ongoing</span>
+                            {% else %}
+                                <span class="cancel">Completed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

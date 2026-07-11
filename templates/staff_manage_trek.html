@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    body {
+        background: #b5b9be;
+    }
+    .content {
+        display: flex;
+        min-height: 100vh;
+    }
+    .sid-bar {
+        width: 220px;
+        background: rgb(91, 132, 154);
+        padding: 20px;
+        margin: 20px;
+        border-radius: 10px;
+    }
+    .sid-bar h2 {
+        margin-bottom: 30px;
+    }
+    .sid-bar a {
+        display: block;
+        text-decoration: none;
+        color: black;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+    .sid-bar a:hover {
+        background: #12385b;
+        color: white;
+    }
+    .active {
+        background: #12385b;
+        color: white !important;
+    }
+    .main {
+        flex: 1;
+        padding: 25px;
+    }
+    .topbar {
+        background: rgb(91, 132, 154);
+        padding: 18px 25px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    .topbar h2 {
+        color: #111827;
+    }
+    .box {
+        background: rgb(91, 146, 154);
+        border-radius: 10px;
+        padding: 25px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th {
+        width: 30%;
+        text-align: left;
+        padding: 16px;
+        background: #19666c;
+    }
+    td {
+        padding: 16px;
+        border-bottom: 1px solid #d3cccc;
+    }
+    select {
+        width: 220px;
+        padding: 10px;
+        border-radius: 6px;
+        
+    }
+    .trek-status{
+        background-color: #a2b0ae;
+    }
+    .info {
+        font-weight: bold;
+    }
+    .butn {
+        display: inline-block;
+        text-decoration: none;
+        color: rgb(213, 204, 204);
+        padding: 10px 18px;
+        border-radius: 6px;
+        font-weight: bold;
+    }
+    .edit {
+        background: #0f5766;
+    }
+    .participant {
+        background: #0f766e;
+    }
+    .save {
+        background: #0b5150;
+        border: none;
+        cursor: pointer;
+    }
+    .cancel {
+        background: #8b1010;
+    }
+    .bottom {
+        margin-top: 25px;
+        display: flex;
+        gap: 15px;
+    }
+</style>
+<div class="content">
+    <div class="sid-bar">
+        <h2>Adventure Staff</h2>
+        <a href="{{ url_for('staff_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('current_tracks') }}">Current Treks</a>
+        <a href="{{ url_for('closed_tracks') }}">Closed Treks</a>
+        <a href="{{ url_for('staff_itself_profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <div class="main">
+        <div class="topbar">
+            <h2>Manage Trek</h2>
+            <div>{{ session['username'] if session.get('username') else "Staff" }}</div>
+        </div>
+            <form method="POST">
+                <div class="box">
+                    <table>
+                        <tr>
+                            <th>Trek name</th>
+                            <td>{{ trek.rout_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Destination</th>
+                            <td>{{ trek.destination }}</td>
+                        </tr>
+                        <tr>
+                            <th>Capacity</th>
+                            <td>{{ trek.capcity }}</td>
+                        </tr>
+                        <tr>
+                            <th>Booked participants</th>
+                            <td>{{ trek.bookings|length }}</td>
+                        </tr>
+                        <tr>
+                            <th>Left slots</th>
+                            <td>{{ trek.remening_spots }}</td>
+                        </tr>
+                        <tr>
+                            <th>Edit slots</th>
+                            <td>
+                                <a href="{{ url_for('staff_edit_trek',trek_id=trek.adv_rout_id) }}" class="butn edit">Edit Slots</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Track status</th>
+                            <td>
+                                <select name="track_status" class="trek-status">
+                                    <option value="Upcoming" {% if trek.track_status=="Upcoming" %}selected{% endif %}>Upcoming</option>
+                                    <option value="Ongoing" {% if trek.track_status=="Ongoing" %}selected{% endif %}>Ongoing</option>
+                                    <option value="Completed" {% if trek.track_status=="Completed" %}selected{% endif%}>Completed</option>
+                                </select>
+                            </td>
+                        </tr>
+                       <tr>
+                            <th>Booking Status</th>
+                            {% if trek.track_status == "Upcoming" %}
+                            <td>
+                                <select name="booking_status" class="trek-status">
+                                    <option value="Open"{% if trek.status_open_close == "Open" %}selected{% endif %}>Open</option>
+                                    <option value="Close"{% if trek.status_open_close == "Close" %}selected{% endif %}>Close</option>
+                                </select>
+                            </td>
+                            {% else %}
+                            <td class="info">Close </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <th>Slot request status</th>
+                            <td>{{ trek.slot_request_status }}</td>
+                        </tr>
+                        <tr>
+                            <th>Participants</th>
+                            <td>
+                                <a href="{{ url_for('staff_participants',trek_id=trek.adv_rout_id) }}"class="butn participant">View participant</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Start date</th>
+                            <td>{{ trek.strt_trck_date.strftime('%d %b %Y') }}</td>
+                        </tr>
+                        <tr>
+                            <th>End date</th>
+                            <td>{{ trek.end_trck_date.strftime('%d %b %Y') }}</td>
+                        </tr>
+                    </table>
+                    <div class="bottom">
+                        <button type="submit" class="butn save">Save Changes</button>
+                        <a href="{{ url_for('staff_dashboard') }}" class="butn cancel">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% endblock %}

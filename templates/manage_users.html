@@ -166,7 +166,6 @@
             <a href="{{ url_for('manage_users') }}" class="active-link">Manage Users</a>
             <a href="{{ url_for('manage_trek') }}">Manage Trek</a>
             <a href="{{ url_for('booking_table') }}">Booking Table</a>
-            <a href="#">Settings</a>
             <a href="{{ url_for('logout') }}">Logout</a>
         </div>
     </div>
@@ -178,14 +177,8 @@
         </div>
         <div class="user-box">
             <div class="box">
-                <a href="{{ url_for('manage_users', tab='active') }}"
-                class="{% if active_tab == 'active' %}active-tab{% endif %}">
-                    Active Users
-                </a>
-                <a href="{{ url_for('manage_users', tab='blacklisted') }}"
-                class="{% if active_tab == 'blacklisted' %}active-tab{% endif %}">
-                    Blacklisted Users
-                </a>
+                <a href="{{ url_for('manage_users', tab='active') }}"class="{% if active_tab == 'active' %}active-tab{% endif %}">Active Users</a>
+                <a href="{{ url_for('manage_users', tab='blacklisted') }}"class="{% if active_tab == 'blacklisted' %}active-tab{% endif %}">Blacklisted Users</a>
             </div>
             <table>
                 <thead>
@@ -207,20 +200,12 @@
                         <td>{{ user.usrname }}</td>
                         <td>{{ user.usr_mail }}</td>
                         <td>{{ user.phone_no }}</td>
+                        <td><span class="active">Active</span></td>
                         <td>
-                            <span class="active">Active</span>
+                            <a href="{{ url_for('user_profile', user_id=user.usr_ref_id) }}"class="butn profile-butn">View Profile</a>
                         </td>
                         <td>
-                            <a href="{{ url_for('user_profile', user_id=user.usr_ref_id) }}"
-                            class="butn profile-butn">
-                                View Profile
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{ url_for('blacklist_user', user_id=user.usr_ref_id) }}"
-                            class="butn black-butn">
-                                Blacklist
-                            </a>
+                            <a href="{{ url_for('blacklist_user', user_id=user.usr_ref_id) }}"class="butn black-butn">Blacklist</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -231,20 +216,12 @@
                         <td>{{ user.usrname }}</td>
                         <td>{{ user.usr_mail }}</td>
                         <td>{{ user.phone_no }}</td>
+                        <td><span class="blacklisted">Blacklisted</span></td>
                         <td>
-                            <span class="blacklisted">Blacklisted</span>
+                            <a href="{{ url_for('user_profile', user_id=user.usr_ref_id) }}"class="butn profile-butn">View Profile </a>
                         </td>
                         <td>
-                            <a href="{{ url_for('user_profile', user_id=user.usr_ref_id) }}"
-                            class="butn profile-butn">
-                                View Profile
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{ url_for('unblacklist_user', user_id=user.usr_ref_id) }}"
-                            class="butn green-butn">
-                                Remove Blacklist
-                            </a>
+                            <a href="{{ url_for('unblacklist_user', user_id=user.usr_ref_id) }}"class="butn green-butn">Remove Blacklist</a>
                         </td>
                     </tr>
                     {% endfor %}

@@ -14,7 +14,7 @@
         body{
             background:#939eb3;
         }
-        .main-container{
+        .main-content{
             width:60%;
             margin:40px auto;
         }
@@ -52,14 +52,12 @@
             font-size:15px;
             background:white;
         }
-
-
-        .btn-box{
+        .butn-box{
             display:flex;
             gap:15px;
             margin-top:25px;
         }
-        .save-btn{
+        .save-butn{
             padding:12px 22px;
             border:none;
             background:#12385b;
@@ -69,10 +67,10 @@
             cursor:pointer;
             font-weight:bold;
         }
-        .save-btn:hover{
+        .save-butn:hover{
             background:#12385b;
         }
-        .back-btn{
+        .back-butn{
             padding:12px 22px;
             background:#12385b;
             color:white;
@@ -80,13 +78,14 @@
             border-radius:8px;
             font-weight:bold;
         }
-        .back-btn:hover{
+        .back-butn:hover{
             background:#26547d;
         }
     </style>
 </head>
 <body>
-    <div class="main-container">
+    <div class="main-content">
+        <!--form box of user profile-->
         <div class="form-box">
             <h2>Edit Profile</h2>
             <form method="POST">
@@ -116,9 +115,9 @@
                     <label>Country</label>
                     <input type="text"name="county"value="{{ user.county }}">
                 </div>
-                <div class="btn-box">
-                    <button type="submit"class="save-btn">Save Changes</button>
-                    <a href="{{ url_for('view_profile_user') }}"class="back-btn">Back</a>
+                <div class="butn-box">
+                    <button type="submit"class="save-butn">Save Changes</button>
+                    <a href="{{ url_for('edit_profile_user') }}"class="back-butn">Back</a>
                 </div>
             </form>
         </div>

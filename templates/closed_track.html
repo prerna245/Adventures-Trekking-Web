@@ -8,12 +8,27 @@
     }
     .contaner{
         padding:30px;
+        min-height:75vh;
     }
     .head{
         margin-bottom:25px;
     }
-    .head h1{
-        color:#111827;
+    .button-box{
+        margin:20px 0;
+    }
+
+    .back-butn{
+        display:inline-block;
+        padding:10px 18px;
+        background:#12385b;
+        color:white;
+        text-decoration:none;
+        border-radius:8px;
+        font-weight:bold;
+    }
+
+    .back-butn:hover{
+        background:#0d2c47;
     }
     table{
         width:100%;
@@ -33,14 +48,19 @@
     tr{
         border-bottom:1px solid #118484;
     }
-    .completed{
+    .complet{
         color:rgb(227, 20, 20);
         font-weight:bold;
     }
 </style>
 <div class="contaner">
     <div class="head">
-        <h1>Closed Treks</h1>
+        <h1>Closed Treks of advantrues staff</h1>
+    </div>
+    <div class="button-box">
+        <a href="{{ url_for('staff_dashboard') }}" class="back-butn">
+            Back to Staff Dashboard
+        </a>
     </div>
     <table>
         <thead>
@@ -63,7 +83,7 @@
                 <td>{{ trek.strt_trck_date.strftime('%d %b %Y') }}</td>
                 <td>{{ trek.end_trck_date.strftime('%d %b %Y') }}</td>
                 <td>
-                    <span class="completed">Completed</span>
+                    <span class="complet">Completed</span>
                 </td>
             </tr>
             {% endfor %}

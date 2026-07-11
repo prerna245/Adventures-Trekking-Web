@@ -15,7 +15,7 @@
             background:#939eb3;
         }
         /* main context */
-        .main-container{
+        .main-content{
             width:95%;
             margin:30px auto;
         }
@@ -33,7 +33,7 @@
             color:#0b101a;
         }
         /* button of back to dashbord */
-        .back-btn{
+        .back-butn{
             display:inline-block;
             margin-bottom:20px;
             padding:10px 18px;
@@ -43,7 +43,7 @@
             border-radius:8px;
             font-weight:bold;
         }
-        .back-btn:hover{
+        .back-butn:hover{
             background:#1a3e5e;
         }
         /* profile table */
@@ -98,7 +98,7 @@
             font-weight:bold;
         }
         
-        .edit-btn{
+        .edit-butn{
             display:inline-block;
             margin-bottom:20px;
             padding:10px 18px;
@@ -109,18 +109,15 @@
             font-weight:bold;
         }
 
-        .edit-btn:hover{
+        .edit-butn:hover{
             background:#5180ac;
         }
     </style>
 </head>
 <body>
-    <div class="main-container">
+    <div class="main-content">
         <!--back buton-->
-        <a href="{{ url_for('manage_users') }}"
-        class="back-btn">
-            ← Back To Dashboard
-        </a>
+        <a href="{{ url_for('manage_users') }}"class="back-butn">Back To Dashboard</a>
         <!-- profile table -->
         <div class="box">
             <h2>My Profile</h2>

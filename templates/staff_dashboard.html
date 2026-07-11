@@ -90,23 +90,20 @@
         font-size:35px;
         color:#111827;
     }
-    /*  */
+    /* action*/
     .action-fr-quick{
         background:white;
         padding:25px;
         border-radius:12px;
         margin-bottom:25px;
     }
-
     .action-fr-quick h2{
         margin-bottom:20px;
     }
-
     .quick-butn{
         display:flex;
         gap:15px;
     }
-
     .quick-butn a{
         text-decoration:none;
         background:#06b6d4;
@@ -115,28 +112,21 @@
         border-radius:8px;
         font-weight:bold;
     }
-
-    /**/
-
     .asign-task-sec{
         background:rgb(91, 132, 154);
         padding:25px;
         border-radius:12px;
     }
-
     .asign-task-sec h2{
         margin-bottom:25px;
         color:#111827;
     }
-
     /* tabs */
-
     .Asign-table{
         display:flex;
         gap:15px;
         margin-bottom:25px;
     }
-
     .tab-butn{
         padding:10px 20px;
         border:none;
@@ -144,14 +134,11 @@
         border-radius:8px;
         font-weight:600;
     }
-
     .active-tab{
         background:#dbeafe;
         color:#1e47a0;
     }
-
     /* table */
-
     table{
         width:100%;
         border-collapse:collapse;
@@ -170,19 +157,19 @@
     }
     /* extrea*/
     .status-upcoming{
-    color:#c07c18;
+    color:#c17f1c;
     font-weight:bold;
-}
+    }
 
-.status-ongoing{
-    color:green;
-    font-weight:bold;
-}
+    .status-ongoing{
+        color:rgb(13, 121, 13);
+        font-weight:bold;
+    }
 
-.completed{
-    color:red;
-    font-weight:bold;
-}
+    .complet{
+        color:rgb(125, 26, 26);
+        font-weight:bold;
+    }
     /* buttons */
     .appr-butn{
         background:#117b38;
@@ -203,16 +190,30 @@
         display:flex;
         gap:10px;
     }
+    .edit-butn{
+        display: inline-block;
+        background:#0f766e;
+        color:white;
+        padding:8px 16px;
+        border-radius:6px;
+        text-decoration:none;
+        font-weight:bold;
+        transition:0.3s;
+    }
+
+    .edit-butn:hover{
+        background:#115e59;
+    }
 </style>
 <div class="box-cotent">
-    <!--side box of admin  -->
+    <!--side box of staff-->
     <div class="staff-sid-bar">
         <h2>Adventure Staff</h2>
         <div class="sid-box-element">
             <a href="{{ url_for('staff_dashboard') }}"class="active-link">Dashboard</a>
-            <a href="{{ url_for('current_tracks') }}">Current Assign Trek</a>
-            <a href="{{ url_for('closed_tracks') }}">Closed Treks</a>
-            <a href="{{ url_for('edit_staff_profile') }}">Edit Your Profile</a>
+            <a href="{{ url_for('current_tracks') }}">Current assign trek</a>
+            <a href="{{ url_for('closed_tracks') }}">Closed treks</a>
+            <a href="{{ url_for('staff_itself_profile') }}">Profile</a>
             <a href="{{ url_for('logout') }}">Logout</a>
         </div>
     </div>
@@ -270,32 +271,51 @@
                         <td>{{ trek.strt_trck_date.strftime('%d %b %Y') }}</td>
                         <td>{{ trek.end_trck_date.strftime('%d %b %Y') }}</td>
                         <td>
-                            {% if trek.track_status == "Upcoming" %}
-                                <span style="color:orange;font-weight:bold;">Upcoming</span>
-                            {% elif trek.track_status == "Ongoing" %}
-                                <span style="color:green;font-weight:bold;">Ongoing</span>
-                            {% else %}
-                                <span style="color:red;font-weight:bold;">Completed</span>                        
-                            {% endif %}
+                        {% if trek.track_status == "Upcoming" %}
+                            <span class="status-upcoming">Upcoming</span>
+                        {% elif trek.track_status == "Ongoing" %}
+                            <span class="status-ongoing">Ongoing</span>
+                        {% else %}
+                            <span class="status-complet">Completed</span>
+                        {% endif %}
                         </td>
                         <td>
-                            {% if trek.status_open_close == "Open" %}
-                                <span style="color:green;font-weight:bold;">open</span>
-                            {% else %}
-                                <span style="color:red;font-weight:bold;">Close</span>
-                            {% endif %}
+                        {% if trek.status_open_close == "Open" %}
+                            <span class="booking-open">Open</span>
+                        {% else %}
+                            <span class="booking-close">Close</span>
+                        {% endif %}
                         </td>
                         <td>
-                            {% if trek.slot_request_status == "Pending" %}
-                                <span style="color:orange;font-weight:bold;">Pending</span>
-                            {% else %}
-                                <span style="color:green;font-weight:bold;">Approved</span>
-                            {% endif %}
+                        {% if trek.slot_request_status == "Pending" %}
+                            <span class="request-pending">Pending</span>
+                        {% else %}
+                            <span class="request-approved">Approved</span>
+                        {% endif %}
                         </td>
                         <td>
-                            <a href="{{ url_for('edit_slots', trek_id=trek.adv_rout_id) }}"
-                            style="background:blue;color:white;padding:6px 12px;text-decoration:none;border-radius:5px;">
+                        {% if trek.track_status == "Upcoming"
+                            and trek.status_open_close == "Open"
+                            and trek.slot_request_status == "Approved" %}
+
+                            <a href="{{ url_for('staff_edit_trek', trek_id=trek.adv_rout_id) }}"
+                            class="edit-butn">
                                 Edit
+                            </a>
+                            
+                        {% elif trek.slot_request_status == "Pending" %}
+                            <span style="color:orange;font-weight:bold;">
+                                Waiting for Admin
+                            </span>
+                        {% else %}
+                            <span style="color:rgb(152, 27, 27);font-weight:bold;">
+                                Not Allowed
+                            </span>
+                        {% endif %}
+                            <a href="{{ url_for('staff_manage_trek',
+                            trek_id=trek.adv_rout_id) }}"
+                            class="edit-butn">
+                                Manage Track
                             </a>
                         </td>
                     </tr>
@@ -325,15 +345,15 @@
                 </thead>
 
                 <tbody>
-                {% if closed_tracks_list %}
-                    {% for trek in closed_tracks_list %}
+                {% if closed_tracks %}
+                    {% for trek in closed_tracks %}
                     <tr>
                         <td>{{ trek.rout_name }}</td>
                         <td>{{ trek.destination }}</td>
                         <td>{{ trek.bookings|length }}</td>
                         <td>{{ trek.strt_trck_date.strftime('%d %b %Y') }}</td>
                         <td>{{ trek.end_trck_date.strftime('%d %b %Y') }}</td>
-                        <td><span class="completed">Completed</span></td>
+                        <td><span class="complet">Completed</span></td>
                     </tr>
                     {% endfor %}
                 {% else %}

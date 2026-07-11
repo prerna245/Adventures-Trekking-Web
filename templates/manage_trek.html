@@ -1,238 +1,227 @@
 {% extends "base.html" %}
 {% block content %}
-    <style>
+<style>
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-        }
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+    }
 
-        body{
-            background:#9198a4;
-            padding:0px;
-        }
-        /* admin side bar */
-        .cont-of-elem{
-            display:flex;
-            min-height:80vh;
-        }
-        .admin-sid-bar{
-            width:240px;
-            background:rgb(69, 106, 126);
-            border-right:1px solid #ddd;
-            padding:30px;
-            margin-top: 30px;
-            margin-bottom: 30px;
-        }
-        .head{
-            font-size:22px;
-            font-weight:bold;
-            margin-bottom:30px;
-            color:#111827;
-        }
-        .name-of-admin{
-            font-weight: bold;
-            font-size: 16px;
-        }
+    body{
+        background:#9198a4;
+        padding:0px;
+    }
+    /* admin side bar */
+    .cont-of-elem{
+        display:flex;
+        min-height:80vh;
+    }
+    .admin-sid-bar{
+        width:240px;
+        background:rgb(69, 106, 126);
+        border-right:1px solid #ddd;
+        padding:30px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    .head{
+        font-size:22px;
+        font-weight:bold;
+        margin-bottom:30px;
+        color:#111827;
+    }
+    .name-of-admin{
+        font-weight: bold;
+        font-size: 16px;
+    }
 
-        .sid-bar-element{
-            display:flex;
-            flex-direction:column;
-            gap:10px;
-        }
+    .sid-bar-element{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+    }
 
-        .sid-bar-element a{
-            text-decoration:none;
-            padding:14px;
-            border-radius:10px;
-            color:#0a0c0c;
-            font-weight:600;
-            transition:0.3s;
-        }
-        .sid-bar-element a:hover{
-            background:#12385b;
-            color:white;
-        }
-        .active-link{
-            background:#12385b;
-            color:white !important;
-        }
-        /*main content here*/
-        .main-content{
-            flex:1;
-            padding:25px;
-        }
-        .top-head{
-            background:rgb(69, 106, 126);
-            padding:18px 25px;
-            border-radius:12px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:25px;
-            border:1px solid #eee;
-        }
+    .sid-bar-element a{
+        text-decoration:none;
+        padding:14px;
+        border-radius:10px;
+        color:#0a0c0c;
+        font-weight:600;
+        transition:0.3s;
+    }
+    .sid-bar-element a:hover{
+        background:#12385b;
+        color:white;
+    }
+    .active-link{
+        background:#12385b;
+        color:white !important;
+    }
+    /*main content here*/
+    .main-content{
+        flex:1;
+        padding:25px;
+    }
+    .top-head{
+        background:rgb(69, 106, 126);
+        padding:18px 25px;
+        border-radius:12px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:25px;
+        border:1px solid #eee;
+    }
 
-        .top-head h1{
-            font-size:24px;
-            color:#111827;
-        }
+    .top-head h1{
+        font-size:24px;
+        color:#111827;
+    }
 
-        .name-of-admin{
-            font-weight:bold;
-            font-size:16px;
-        }
+    .name-of-admin{
+        font-weight:bold;
+        font-size:16px;
+    }
 
-        .detail-box{
-            background:rgb(81, 125, 134);
-            padding:25px;
-            border-radius:12px;
-            box-shadow:0 2px 10px rgba(0,0,0,0.08);
-        }
+    .detail-box{
+        background:rgb(81, 125, 134);
+        padding:25px;
+        border-radius:12px;
+        box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    }
 
-        .top-bar{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:20px;
-            flex-wrap:wrap;
-            gap:15px;
-        }
+    .top-bar{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:20px;
+        flex-wrap:wrap;
+        gap:15px;
+    }
 
-        .top-bar h2{
-            color:#222;
-        }
-        .search-box{
-            display:flex;
-            align-items:center;
-            gap:10px;
-        }
+    .top-bar h2{
+        color:#222;
+    }
+    .type-box{
+        display:flex;
+        align-items:center;
+        gap:10px;
+    }
 
-        .search-box input{
-            width:320px;
-            padding:10px 15px;
-            border:1px solid #ccc;
-            border-radius:8px;
-            outline:none;
-        }
+    .type-box input{
+        width:320px;
+        padding:10px 15px;
+        border:1px solid #ccc;
+        border-radius:8px;
+        outline:none;
+    }
 
-        .search-butn{
-            background:#12385b;
-            color:white;
-            border:none;
-            padding:10px 18px;
-            border-radius:8px;
-            cursor:pointer;
-            font-weight:bold;
-        }
+    .search-butn{
+        background:#12385b;
+        color:white;
+        border:none;
+        padding:10px 18px;
+        border-radius:8px;
+        cursor:pointer;
+        font-weight:bold;
+    }
 
-        .search-butn:hover{
-            background:#0b2d4b;
-        }
+    .search-butn:hover{
+        background:#0b2d4b;
+    }
 
-        .add-butn{
-            background:#1e5866;
-            color:rgb(11, 1, 1);
-            padding:10px 18px;
-            border-radius:6px;
-            text-decoration:none;
-            font-weight:bold;
-        }
-        .search-box{
-            display:flex;
-            align-items:center;
-            gap:10px;
-        }
-        table{
-            width:100%;
-            border-collapse:collapse;
-            margin-top:20px;
-        }
+    .add-butn{
+        background:#1e5866;
+        color:rgb(11, 1, 1);
+        padding:10px 18px;
+        border-radius:6px;
+        text-decoration:none;
+        font-weight:bold;
+    }
+    .type-box{
+        display:flex;
+        align-items:center;
+        gap:10px;
+    }
+    table{
+        width:100%;
+        border-collapse:collapse;
+        margin-top:20px;
+    }
+    table th{
+        padding:14px;
+        border-bottom:1px solid #9ca9ae;
+        text-align:center;
+        font-size:14px;
+    }
+    table td{
+        padding:14px;
+        border-bottom:1px solid #9ca9ae;
+        text-align:center;
+        font-size:14px;
+    }
+    table th{
+        background:#ced1d4;
+    }
+    tr:hover{
+        background:#8ea1a5;
+    }
+    .open{
+        color:green;
+        font-weight:bold;
+    }
+    .closed{
+        color:red;
+        font-weight:bold;
+    }
+    .upcoming{
+        color:#2563eb;
+        font-weight:bold;
+    }
+    .ongoing{
+        color:orange;
+        font-weight:bold;
+    }
+    .complet{
+        color:green;
+        font-weight:bold;
+    }
+    .butn{
+        padding:7px 12px;
+        border-radius:5px;
+        text-decoration:none;
+        color:white;
+        font-size:13px;
+        display:inline-block;
+        margin:2px;
+    }
 
-        table th,
-        table td{
-            padding:14px;
-            border-bottom:1px solid #9ca9ae;
-            text-align:center;
-            font-size:14px;
-        }
+    .edit-butn{
+        background:#a17830;
+    }
+    .delete-butn{
+        background:#781c1c;
+    }
+    .details-butn{
+        background:#5a7bac;
+    }
+    .upcoming-butn{
+        background:#658e4b;
+    }
+    .ongoing-butn{
+        background:#785033;
+    }
+    .complet-butn{
+        background:#325a0f;
+    }
 
-        table th{
-            background:#ced1d4;
-        }
-
-        tr:hover{
-            background:#8ea1a5;
-        }
-
-        .open{
-            color:green;
-            font-weight:bold;
-        }
-
-        .closed{
-            color:red;
-            font-weight:bold;
-        }
-
-        .upcoming{
-            color:#2563eb;
-            font-weight:bold;
-        }
-
-        .ongoing{
-            color:orange;
-            font-weight:bold;
-        }
-
-        .completed{
-            color:green;
-            font-weight:bold;
-        }
-
-        .butn{
-            padding:7px 12px;
-            border-radius:5px;
-            text-decoration:none;
-            color:white;
-            font-size:13px;
-            display:inline-block;
-            margin:2px;
-        }
-
-        .edit-butn{
-            background:#a17830;
-        }
-
-        .delete-butn{
-            background:#781c1c;
-        }
-
-        .details-butn{
-            background:#5a7bac;
-        }
-
-        .upcoming-butn{
-            background:#658e4b;
-        }
-
-        .ongoing-butn{
-            background:#785033;
-        }
-
-        .completed-butn{
-            background:#325a0f;
-        }
-
-    </style>
+</style>
 <div class="cont-of-elem">
     <!-- side bar of admin -->
     <div class="admin-sid-bar">
         <div class="head">
-            <div class="name-of-admin">
-            {{ admin.usrname }}
-            </div>
+            <div class="name-of-admin">{{ admin.usrname }}</div>
         </div>
         <div class="sid-bar-element">
             <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
@@ -241,34 +230,25 @@
             <a href="{{ url_for('manage_users') }}">Manage Users</a>
             <a href="{{ url_for('manage_trek') }}" class="active-link">Manage Trek</a>
             <a href="{{ url_for('booking_table') }}">Booking Table</a>
-            <a href="#">Settings</a>
             <a href="{{ url_for('logout') }}">Logout</a>
         </div>
     </div>
-
     <!-- main context start -->
     <div class="main-content">
         <!-- top head -->
         <div class="top-head">
             <h1>Adventrus Trekking Management Application</h1>
-            <div class="name-of-admin">
-                {{ admin_name }}
-            </div>
+            <div class="name-of-admin">{{ admin_name }}</div>
         </div>
         <!-- box that show all detail of tracking -->
         <div class="detail-box">
             <div class="top-bar">
                 <h2>Manage Treks</h2>
-                <form method="GET" action="{{ url_for('manage_trek') }}" class="search-box">
-                    <input type="text"
-                        name="search"
-                        placeholder="Search trek or destination or trek..."
-                        value="{{ request.args.get('search', '') }}">
+                <form method="GET" action="{{ url_for('manage_trek') }}" class="type-box">
+                    <input type="text"name="search"placeholder="Search trek or destination or trek..."value="{{ request.args.get('search', '') }}">
                     <button type="submit" class="search-butn">Search</button>
                 </form>
-                <a href="{{ url_for('add_trek') }}"class="add-butn">
-                    + Add New Trek
-                </a>
+                <a href="{{ url_for('add_trek') }}"class="add-butn">Add New Trek</a>
             </div>
             <table id="trekTable">
                 <thead>
@@ -296,64 +276,39 @@
                     <td>{{ trek.destination }}</td>
                     <td>{{ trek.staff.usrname if trek.staff else "Not Assigned" }}
                         {% if trek.staff %}
-                        <a href="{{ url_for('staff_profile',
-                        staff_id=trek.staff.usr_ref_id) }}"
-                        class="butn details-butn">
-                            View detail
-                        </a>
+                        <a href="{{ url_for('staff_profile',staff_id=trek.staff.usr_ref_id) }}"class="butn details-butn">View detail</a>
                         {% endif %}
                     </td>
                     <td>{{ trek.difficulty_level }}</td>
                     <td>{{ trek.strt_trck_date }}</td>
                     <td>{{ trek.end_trck_date }}</td>
                     <td>{{ trek.bookings|length }}
-                        <a href="{{ url_for('participant_list',
-                        trek_id=trek.adv_rout_id) }}"
-                        class="butn details-butn">
-                            View details
-                        </a>
+                        <a href="{{ url_for('participant_list',trek_id=trek.adv_rout_id) }}"class="butn details-butn">View details</a>
                     </td>
                     <td>{{ trek.capcity }}</td>
                     <td>{{ trek.track_status }}</td>
                     <td>
-                        <a href="{{ url_for('change_track_status',
-                            track_id=trek.adv_rout_id,
-                            new_status='Upcoming') }}"
-                            class="butn upcoming-butn">
-                            Upcoming
-                        </a>
-
-                        <a href="{{ url_for('change_track_status',
-                            track_id=trek.adv_rout_id,
-                            new_status='Ongoing') }}"
-                            class="butn ongoing-butn">
-                            Ongoing
-                        </a>
-
-                        <a href="{{ url_for('change_track_status',
-                            track_id=trek.adv_rout_id,
-                            new_status='Completed') }}"
-                            class="butn completed-butn">
-                            Completed
-                        </a>
+                        <a href="{{ url_for('change_track_status',track_id=trek.adv_rout_id,new_status='Upcoming') }}"class="butn upcoming-butn">Upcoming</a>
+                        <a href="{{ url_for('change_track_status',track_id=trek.adv_rout_id,new_status='Ongoing') }}"class="butn ongoing-butn">Ongoing</a>
+                        <a href="{{ url_for('change_track_status',track_id=trek.adv_rout_id,new_status='Completed') }}"class="butn complet-butn">Completed</a>
                     </td>
-                    <td>{{ trek.status_open_close }}</td>                                       
                     <td>
-                        <a href="{{ url_for('booking_table') }}"
-                        class="butn details-butn">
-                            View trek
-                        </a>
-                        <a href="{{ url_for('edit_trek',
-                        trek_id=trek.adv_rout_id) }}"
-                        class="butn edit-butn">
-                            Edit
-                        </a>
-                        <a href="{{ url_for('delete_trek',
-                        trek_id=trek.adv_rout_id) }}"
-                        class="butn delete-butn"
-                        onclick="return confirm('want to delete trek? All get deleted')">
-                            Delete
-                        </a>
+                    {% if trek.slot_request_status == "Pending" %}
+                        <span style="color:orange;font-weight:bold;">Pending</span>
+                    {% else %}
+                        <span style="color:green;font-weight:bold;">{{ trek.status_open_close }}</span>
+                    {% endif %}
+                    </td>                                       
+                    <td>
+                        <a href="{{ url_for('booking_table') }}"class="butn details-butn">View trek</a>
+                        {% if trek.slot_request_status == "Pending" %}
+                        <a href="{{ url_for('approve_slot_request',trek_id=trek.adv_rout_id) }}"class="butn upcoming-butn">Approve</a>
+                    {% elif trek.track_status == "Upcoming" %}
+                        <a href="{{ url_for('edit_trek',trek_id=trek.adv_rout_id) }}"class="butn edit-butn">Edit</a>
+                    {% else %}
+                        <span style="color:rgb(15, 10, 10); font-weight:bold;">Editing close</span>
+                    {% endif %}
+                        <a href="{{ url_for('delete_trek',trek_id=trek.adv_rout_id) }}"class="butn delete-butn"onclick="return confirm('want to delete trek? All get deleted')">Delete</a>
                     </td>
                 </tr>
                 {% endfor %}

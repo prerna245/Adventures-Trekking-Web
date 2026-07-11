@@ -19,7 +19,8 @@
         min-height:100vh;
     }
 
-    /* Side bar */
+    /* Sidebar table */
+
     .sid-bar{
         width:240px;
         background:rgb(91,132,154);
@@ -108,29 +109,30 @@
 </style>
 <div class="content">
     <div class="sid-bar">
-    <h2>Adventure Admin</h2>
-    <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
-    <a href="{{ url_for('add_trek') }}">Create Treks</a>
-    <a href="{{ url_for('manage_staff') }}">Manage Staff</a>
-    <a href="{{ url_for('manage_users') }}">Manage Users</a>
-    <a href="{{ url_for('manage_trek') }}" class="active">Manage Trek</a>
-    <a href="{{ url_for('booking_table') }}">Booking Table</a>
+    <h2>Adventureus Staff</h2>
+    <a href="{{ url_for('staff_dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('current_tracks') }}">Current Assign Trek</a>
+    <a href="{{ url_for('closed_tracks') }}">Closed Treks</a>
+    <a href="{{ url_for('staff_itself_profile') }}">Profile</a>
     <a href="{{ url_for('logout') }}">Logout</a>
     </div>
 <div class="main">
+    <!--heading of pag-->
     <div class="topbar">
         <h2>Participants - {{ trek.rout_name }}</h2>
-        <div>{{ admin.usrname }}</div>
+        <div>{{ staff.usrname }}</div>
         </div>
-        <a class="butn back"href="{{ url_for('manage_trek') }}">Back</a>
+        <a class="butn back"
+        href="{{ url_for('staff_manage_trek', trek_id=trek.adv_rout_id) }}">Back</a>
         <div class="table-box">
+            <!--table of user book trek-->
             <table>
                 <tr>
                     <th>Username</th>
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Country</th>
-                    <th>Action</th>
+                    <th>Status</th>
                 </tr>
                 {% for booking in bookings %}
                 <tr>
@@ -138,9 +140,7 @@
                     <td>{{ booking.user.usr_mail }}</td>
                     <td>{{ booking.user.phone_no }}</td>
                     <td>{{ booking.user.county }}</td>
-                    <td>
-                    <a class="butn blacklist"href="{{ url_for('blacklist_user',user_id=booking.user.usr_ref_id) }}">Blacklist</a>
-                    </td>
+                    <td>{{ booking.booking_stat }}</td>
                 </tr>
                 {% endfor %}
             </table>

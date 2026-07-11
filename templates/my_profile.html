@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial,sans-serif;
+    }
+
+    body{
+        background:#bdbdc0;
+    }
+
+    .main-content{
+        width:90%;
+        max-width:850px;
+        margin:40px auto;
+    }
+
+    .heading-box{
+        background:rgb(91,132,154);
+        padding:20px;
+        border-radius:10px;
+        border:2px solid black;
+        margin-bottom:25px;
+    }
+
+    .heading-box h1{
+        color:#111827;
+    }
+
+    .profile-box{
+        background:rgb(91,132,154);
+        padding:25px;
+        border-radius:10px;
+        border:2px solid black;
+    }
+
+    .profile-table{
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    .profile-table th{
+        width:230px;
+        background:#9db6c0;
+        text-align:left;
+        padding:15px;
+        border:1px solid #124b68;
+    }
+
+    .profile-table td{
+        padding:15px;
+        border:1px solid #124b68;
+        background:#dbe5ea;
+    }
+
+    .button-box{
+        margin-top:30px;
+        text-align:center;
+    }
+
+    .butn{
+        display:inline-block;
+        text-decoration:none;
+        color:white;
+        background:#12385b;
+        padding:12px 28px;
+        border-radius:8px;
+        margin:0 10px;
+        font-weight:bold;
+    }
+
+    .butn:hover{
+        background:#215b90;
+    }
+</style>
+<div class="main-content">
+    <div class="heading-box"><h1>My Profile</h1></div>
+    <div class="profile-box">
+        <table class="profile-table">
+            <tr>
+                <th>Name</th>
+                <td>{{ user.usrname }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.usr_mail }}</td>
+            </tr>
+            <tr>
+                <th>Phone Number</th>
+                <td>{{ user.phone_no }}</td>
+            </tr>
+            <tr>
+                <th>Gender</th>
+                <td>{{ user.gender }}</td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>{{ user.city_of_usr }}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{ user.county }}</td>
+            </tr>
+        </table>
+        <div class="button-box">
+            <a href="{{ url_for('user_dashboard') }}" class="butn">Back</a>
+            <a href="{{ url_for('edit_profile_user') }}" class="butn">Edit Profile</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

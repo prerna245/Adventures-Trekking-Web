@@ -63,18 +63,18 @@
         flex:1;
         padding:25px;
     }
-    .search-box{
+    .type-box{
         margin-bottom:20px;
     }
 
-    .search-box input{
+    .type-box input{
         padding:10px;
         width:300px;
         border-radius:6px;
         border:1px solid #b6aeae;
     }
 
-    .search-box button{
+    .type-box button{
         padding:10px 18px;
         border:none;
         border-radius:6px;
@@ -149,8 +149,8 @@
         font-weight:bold;
     }
 
-    .completed{
-        color:rgb(63, 119, 63);
+    .complet{
+        color:rgb(137, 43, 137);
         font-weight:bold;
     }
 </style>
@@ -163,7 +163,7 @@
             <a href="{{ url_for('manage_staff') }}">Manage Staff</a>
             <a href="{{ url_for('manage_users') }}">Manage Users</a>
             <a href="{{ url_for('manage_trek') }}">Manage Trek</a>
-            <a href="{{ url_for('booking_table') }}"class="active-link">Booking Table</a>            <a href="#">Settings</a>
+            <a href="{{ url_for('booking_table') }}"class="active-link">Booking Table</a>            
             <a href="{{ url_for('logout') }}">Logout</a>
         </div>
     </div>
@@ -171,12 +171,12 @@
         <div class="track-head">
             <h1>All Bookings & History</h1>
         </div>
-        <form method="GET" class="search-box" style="margin-bottom:20px;">
+        <form method="GET" class="type-box" style="margin-bottom:20px;">
             <input type="text"
                 name="search"
                 placeholder="Search user name,trek name,staff name"
                 value="{{ request.args.get('search','') }}">
-            <button class="btn">Search</button>
+            <button class="butn">Search</button>
         </form>
         <table>
         <thead>
@@ -216,7 +216,7 @@
                     {% elif booking.trek.track_status=="Ongoing" %}
                     <span class="ongoing">Ongoing</span>
                     {% else %}
-                    <span class="completed">Completed</span>
+                    <span class="complet">Completed</span>
                     {% endif %}
                 </td>
                 <td>

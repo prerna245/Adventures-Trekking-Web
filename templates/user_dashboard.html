@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-
-=======
 {% extends "base.html" %}
 {% block content %}
 
@@ -13,7 +10,7 @@
     body{
         background:#bdb2b2;
     }
-    .main-container{
+    .main-content{
         display:flex;
         min-height:100vh;
     }
@@ -119,25 +116,35 @@
         color:rgb(10, 72, 10);
         font-weight:bold;
     }
+    .already-booked{
+        background:#6b7280;
+        color:white;
+        padding:8px 14px;
+        border-radius:5px;
+        font-size:14px;
+        display:inline-block;
+        font-weight:bold;
+    }
     .pending{
         color:rgb(180, 128, 32);
         font-weight:bold;
     }
-    .cancelled{
+    .cancel{
         color:rgb(148, 35, 35);
         font-weight:bold;
     }
 </style>
-<div class="main-container">
+<div class="main-content">
     <!-- sid bar of user -->
     <div class="side-bar">
         <h2>Adventrues User</h2>
         <div class="side-bar-links">
             <a href="{{ url_for('user_dashboard') }}"class="active-link">Dashboard</a>
-            <a href="{{ url_for('browse_treks') }}">Browse Treks</a>
+            <a href="{{ url_for('my_profile') }}">My profile</a>
             <a href="{{ url_for('user_booking_table') }}">My Bookings</a>
-            <a href="{{ url_for('trek_history') }}">History</a>
-            <a href="{{ url_for('view_profile_user') }}">Profile</a>
+            <a href="{{ url_for('all_tracks') }}">All treks</a>
+            <a href="{{ url_for('user_current_tracks') }}">Current Tracks</a>
+            <a href="{{ url_for('user_trek_history') }}">My Trek History</a>
             <a href="{{ url_for('logout') }}">Logout</a>
         </div>
     </div>
@@ -175,16 +182,14 @@
                         <td>{{ trek.total_days_are }} Days</td>
                         <td>{{ trek.remening_spots }}</td>
                         <td>
-                            {% if trek.remening_spots > 0 %}
-                                <a href="{{ url_for('book_trek',
-                                    trek_id=trek.adv_rout_id) }}"
-                                   class="book-butn">
-                                    Book Now
-                                </a>
-                            {% else %}
-                                Full
-                            {% endif %}
-                        </td>
+                        {% if trek.adv_rout_id in booked_trek_ids %}
+                            <span class="booked">Already Booked</span>
+                        {% elif trek.remening_spots <= 0 %}
+                            <span class="cancel">Full</span>
+                        {% else %}
+                            <a href="{{ url_for('book_trek', trek_id=trek.adv_rout_id) }}"class="book-butn">Book Now</a>
+                        {% endif %}
+                    </td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -208,17 +213,11 @@
                         <td>{{ booking.reserved_on.strftime('%d %b %Y') }}</td>
                         <td>
                             {% if booking.booking_stat == "Booked" %}
-                                <span class="booked">
-                                    {{ booking.booking_stat }}
-                                </span>
+                                <span class="booked">{{ booking.booking_stat }}</span>
                             {% elif booking.booking_stat == "Pending" %}
-                                <span class="pending">
-                                    {{ booking.booking_stat }}
-                                </span>
+                                <span class="pending">{{ booking.booking_stat }}</span>
                             {% else %}
-                                <span class="cancelled">
-                                    {{ booking.booking_stat }}
-                                </span>
+                                <span class="cancel">{{ booking.booking_stat }}</span>
                             {% endif %}
                         </td>
                     </tr>
@@ -230,4 +229,4 @@
 </div>
 
 {% endblock %}
->>>>>>> f1e28e6 (complete and update admin dashboard)
+

@@ -11,7 +11,7 @@
     body{
         background:#b2b6bb;
     }
-    .main-container{
+    .main-content{
         width:100%;
         min-height:100vh;
         display:flex;
@@ -54,78 +54,68 @@
         resize:none;
         height:100px;
     }
+    .butn-box{
+            display:flex;
+            gap:15px;
+            margin-top:25px;
+    }
     .save-butn{
-        width:100%;
-        padding:15px;
-        background:#094852;
-        color:white;
+        padding:12px 22px;
         border:none;
+        background:#12385b;
+        color:rgb(228, 219, 219);
         border-radius:8px;
-        font-size:16px;
-        font-weight:bold;
+        font-size:15px;
         cursor:pointer;
-        transition:0.3s;
+        font-weight:bold;
     }
     .save-butn:hover{
-        background:#156974;
+        background:#12385b;
+    }
+    .back-butn{
+        padding:12px 22px;
+        background:#12385b;
+        color:white;
+        text-decoration:none;
+        border-radius:8px;
+        font-weight:bold;
+    }
+    .back-butn:hover{
+        background:#26547d;
     }
 </style>
-<div class="main-container">
+<div class="main-content">
     <div class="profile-box">
         <h1>Edit Staff Profile</h1>
         <form method="POST">
             <div class="form-group">
                 <label>Full Name</label>
-                <input type="text"name="staf_nam"value="{{ staff.staf_nam }}"required>
+                <input type="text" name="usrname" value="{{ staff.user.usrname }}">
             </div>
+
             <div class="form-group">
-                <label>Gender</label>
-                <select name="gender">
-                    <option value="Male"
-                        {% if staff.gender == "Male" %}
-                            selected
-                        {% endif %}
-                    >
-                        Male
-                    </option>
-                    <option value="Female"
-                        {% if staff.gender == "Female" %}
-                            selected
-                        {% endif %}
-                    >
-                        Female
-                    </option>
-                    <option value="Other"
-                        {% if staff.gender == "Other" %}
-                            selected
-                        {% endif %}
-                    >
-                        Other
-                    </option>
-                </select>
+                <label>Email</label>
+                <input type="email" name="usr_mail" value="{{ staff.user.usr_mail }}">
             </div>
+
             <div class="form-group">
-                <label>Emergency Contact</label>
-                <input type="text"name="emerg_contat_no"value="{{ staff.emerg_contat_no }}">
+                <label>Contact Number</label>
+                <input type="text" name="phone_no" value="{{ staff.user.phone_no }}">
             </div>
+
             <div class="form-group">
-                <label>Phone Number</label>
-                <input type="text"name="phon_no"value="{{ staff.phon_no }}">
+                <label>Country</label>
+                <input type="text" name="county" value="{{ staff.user.county }}">
             </div>
+
             <div class="form-group">
-                <label>Years Of Experience</label>
-                <input type="number"name="yers_of_work"value="{{ staff.yers_of_work }}">                    
+                <label>City</label>
+                <input type="text" name="city_of_usr" value="{{ staff.user.city_of_usr }}">
             </div>
-            <div class="form-group">
-                <label>Languages Known</label>
-                <input type="text"name="langugs_known"value="{{ staff.langugs_known }}">
+            <div class="butn-box">
+                <button type="submit" class="save-butn">Save Profile</button>
+                <a href="{{ url_for('staff_itself_profile') }}"class="back-butn">Back</a>
             </div>
-            <div class="form-group">
-                <label>Skill Area</label>
-                <input 
-                    type="text"name="skiil_area"value="{{ staff.skiil_area }}">
-            </div>
-            <button type="submit" class="save-butn">Save Profile</button>
         </form>
     </div>
 </div>
