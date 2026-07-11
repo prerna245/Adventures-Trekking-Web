@@ -31,12 +31,10 @@ class AdventureUser(db.Model):
     adventure_began = db.Column(db.DateTime, default=datetime.utcnow)
     staf_satus = db.Column(db.String(20), default="Pending")  #status of of staff 
     is_blacklsted = db.Column(db.Boolean, default=False)
-    
 
 # relationship
     bokings_fr_usr = db.relationship('AdventureBooking',backref='user',lazy=True)
     staf_profil_of_usr = db.relationship('Adventure_Staff',backref='user',uselist=False)
-
 
 
 # staff table 
@@ -59,6 +57,7 @@ class Adventure_Staff(db.Model):
     #relationship
     #treaking = db.relationship('Adventure_route',backref='assigned_staff',lazy=True)
 
+
 #booking table 
 class AdventureBooking(db.Model):
     __tablename__ = "adventure_bookings"
@@ -76,6 +75,8 @@ class AdventureBooking(db.Model):
     totl_amnt = db.Column(db.Float)
     any_specil_request = db.Column(db.Text)    
     
+    
+
 
 # table for route that we will take for tracking
 
@@ -103,21 +104,10 @@ class Adventure_route(db.Model):
     requested_slots = db.Column(db.Integer)
     slot_request_status = db.Column(db.String(20), default="Approved")
 
-    #relationship
+
+    # Relationships
     bookings = db.relationship('AdventureBooking',backref='trek',lazy=True,cascade="all, delete")
     staff = db.relationship("AdventureUser",foreign_keys=[staf_fr_this_rout],backref="assigned_treks")
-
-#revieww table for score
-class Adventures_Review(db.Model):
-    __tablename__ = "trek_reviews"
-
-    reviw_id = db.Column(db.Integer, primary_key=True)
-    adv_usr_id = db.Column(db.Integer,db.ForeignKey("adventures_users.usr_ref_id"),nullable=False)
-    route_id = db.Column(db.Integer,db.ForeignKey("adventures_route.adv_rout_id"),nullable=False)
-    reviw_score = db.Column(db.Integer)
-    fedback = db.Column(db.Text)
-    deficult_rate=db.Column(db.Integer)  #rate from 1 to 5
-    date_on_crete = db.Column(db.DateTime,default=datetime.utcnow)   #created date when it was created
 
 
 
@@ -131,13 +121,14 @@ def register():
     if request.method == "POST":
         name = request.form.get("name")
         email = request.form.get("email")
+        city = request.form.get("city")
         country = request.form.get("country")
         ph_number = request.form.get("ph_number")
         password = request.form.get("password")
         role = request.form["role"]     # identify user or staff
         hashed_password = generate_password_hash(password)
 
-        adv_users = AdventureUser(usrname=name ,usr_mail=email, county=country, phone_no=ph_number,rolee=role,pasword=hashed_password,staf_satus="Pending" if role == "staff" else "Approved")
+        adv_users = AdventureUser(usrname=name ,usr_mail=email, city_of_usr=city,county=country, phone_no=ph_number,rolee=role,pasword=hashed_password,staf_satus="Pending" if role == "staff" else "Approved")
         regster_usr = AdventureUser.query.filter_by(usr_mail=email).first()
         if regster_usr:
             return "Email already registered"
@@ -155,16 +146,12 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
         regster_usr = AdventureUser.query.filter_by(usr_mail=email).first()
-#all checking 
-        # email check
+            #check for id
         if not regster_usr:
-            return "Invalid Email ID"
-
+            return "Invalid email id"
         # check password
         if not check_password_hash(regster_usr.pasword,password):
             return "Invalid Password"
-        # active check
-        
         # admin will register here
         if regster_usr.rolee == "admin":
             session['user_id'] = regster_usr.usr_ref_id
@@ -191,15 +178,7 @@ def login():
         return "Role not found"
     return render_template("login.html")
  
-#see booked participants
-@app.route("/participant_list/<int:trek_id>")
-def participant_list(trek_id):
-    admin = AdventureUser.query.get("admin_id")
-    trek = Adventure_route.query.get_or_404(trek_id)
 
-    bookings = AdventureBooking.query.filter_by(adv_rout_id=trek_id,booking_stat="Booked").all()
-
-    return render_template("participant_list.html",admin=admin,trek=trek,bookings=bookings)
 #admin dashboard
 @app.route("/admin_dashboard")
 def admin_dashboard():
@@ -231,35 +210,55 @@ def admin_dashboard():
         recent_bookings=recent_bookings
     )
 
+#see booked participants
+@app.route("/participant_list/<int:trek_id>")
+def participant_list(trek_id):
+    admin = AdventureUser.query.get("admin_id")
+    trek = Adventure_route.query.get_or_404(trek_id)
+    bookings = AdventureBooking.query.filter_by(adv_rout_id=trek_id,booking_stat="Booked").all()
+    return render_template("participant_list.html",admin=admin,trek=trek,bookings=bookings)
+
+
 #user dashboard
 @app.route("/user_dashboard")
 def user_dashboard():
-    #user login
     user_id = session.get("user_id")
     if not user_id:
         return redirect(url_for("login"))
-    if session.get("role") !="user":
-        return "acess denied"
-    # user detail
-    user = AdventureUser.query.get(user_id)
-    # this show available trek blike if it available or not
-    treks = Adventure_route.query.all()
-    # here user booking 
-    my_bookings = AdventureBooking.query.filter_by(adv_usr_id=user_id).all()
-    return render_template("user_dashboard.html",user=user,treks=treks,my_bookings=my_bookings)
 
+    if session.get("role") != "user":
+        return "Access denied"
+    
+    user = AdventureUser.query.get(user_id)
+    treks = Adventure_route.query.filter(Adventure_route.status_open_close == "Open",Adventure_route.track_status != "Completed").all()
+    my_bookings = AdventureBooking.query.filter_by(adv_usr_id=user_id).all()
+
+    # IDs of treks already booked by this user
+    booked_trek_ids = [
+        booking.adv_rout_id
+        for booking in my_bookings 
+        if booking.booking_stat == "Booked"]
+
+    return render_template("user_dashboard.html",user=user,treks=treks,my_bookings=my_bookings,booked_trek_ids=booked_trek_ids)
+
+#user can book trek
 @app.route("/book_trek/<int:trek_id>")
 def book_trek(trek_id):
     user_id = session.get("user_id")
     if not user_id:
         return redirect(url_for("login"))
     trek = Adventure_route.query.get_or_404(trek_id)
-    # booking willn't availble when spot become 0 
     if trek.remening_spots <= 0:
-        return "No spots available"
-    # checking exist booking 
+        return "No slots are available"
+    # User already booked this trek
     existing_booking = AdventureBooking.query.filter_by(adv_usr_id=user_id,adv_rout_id=trek_id).first()
-    #booking
+    if existing_booking:
+        return "You have already booked this trek."
+    # User has another active booking
+    active_booking = AdventureBooking.query.join(Adventure_route).filter(AdventureBooking.adv_usr_id == user_id,AdventureBooking.booking_stat == "Booked",Adventure_route.track_status != "Completed").first()
+    if active_booking:
+        return "You already have an active trek. Complete your current trek before booking another one."
+
     booking = AdventureBooking(
         adv_usr_id=user_id,
         adv_rout_id=trek_id,
@@ -269,63 +268,21 @@ def book_trek(trek_id):
         group_size=1,paymnt_stats="Pending",
         totl_amnt=trek.rout_price
     )
-    # show left space if any
     trek.remening_spots -= 1
     db.session.add(booking)
     db.session.commit()
-    return redirect(url_for("user_dashboard"))
-
-#profile of user
-@app.route("/view_profile_user")
-def view_profile_user():
-    # check login
-    user_id = session.get("user_id")
-    if not user_id:
-        return redirect(url_for("login"))
-    # current user
-    user = AdventureUser.query.get(user_id)
-    # all bookings of current user
-    user_bookings = AdventureBooking.query.filter_by(
-        adv_usr_id=user_id
-    ).all()
-
-    return render_template(
-        "view_profile_user.html",
-        user=user,
-        user_bookings=user_bookings
-    )
-
-#user can edit profile
-@app.route("/edit_user_profile", methods=["GET", "POST"])
-def edit_user_profile():
-
-    # login check
-    user_id = session.get("user_id")
-
-    if not user_id:
-        return redirect(url_for("login"))
-
-    # current user
-    user = AdventureUser.query.get(user_id)
-
-    # update profile
-    if request.method == "POST":
-        user.usrname = request.form.get("usrname")
-        user.usr_mail = request.form.get("usr_mail")
-        user.phone_no = request.form.get("phone_no")
-        user.gender = request.form.get("gender")
-        user.city_of_usr = request.form.get("city_of_usr")
-        user.county = request.form.get("county")
-        db.session.commit()
-        return redirect(url_for("view_profile_user"))
-    return render_template("edit_user_profile.html",user=user)
-
+    return redirect(url_for("user_booking_table"))
 
 #user dashboard
 @app.route("/user_treker_Dashboard")
 def user_treker():
     return render_template("user_treker_Dashboard.html")
 
+#user can see staff profile
+@app.route("/staff_public_profile/<int:staff_id>")
+def staff_public_profile(staff_id):
+    staff = AdventureUser.query.get_or_404(staff_id)
+    return render_template("staff_public_profile.html",staff=staff)
 
 #staff dashboard
 @app.route('/staff_dashboard')
@@ -337,21 +294,19 @@ def staff_dashboard():
     if session.get("role") != "staff":
         return "Access Denied"
 
-    # current logged in staff
+    # current log in staff
     staff = AdventureUser.query.get(staff_id)
-
     # treks assigned by admin
     all_treks = Adventure_route.query.filter_by(staf_fr_this_rout=staff_id).all()
     assigned_treks = [trek for trek in all_treks if trek.track_status in ["Upcoming", "Ongoing"]]
     #close trek
     closed_tracks = [trek for trek in all_treks if trek.track_status == "Completed"]
-    
+
     #count of each get update 
     total_assigned_treks = len(assigned_treks)
     total_participants = sum(len(trek.bookings) for trek in assigned_treks)
     total_tracks = len(all_treks)    
     closed_treks = len(closed_tracks)
-
 
     return render_template(
         "staff_dashboard.html",
@@ -364,6 +319,17 @@ def staff_dashboard():
         closed_treks=closed_treks
     )
 
+#staff profile
+@app.route("/staff/profile")
+def staff_itself_profile():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("login"))
+    if session.get("role") != "staff":
+        return "Access Denied"
+    staff = AdventureUser.query.get(user_id)
+    return render_template("staff_itself_profile.html",staff=staff)
+
 #staff can edit
 @app.route("/edit_staff_profile", methods=["GET", "POST"])
 def edit_staff_profile():
@@ -371,17 +337,24 @@ def edit_staff_profile():
     if not user_id:
         return redirect(url_for("login"))
     staff = Adventure_Staff.query.filter_by(usr_ref_id=user_id).first()
+    user = AdventureUser.query.get(user_id)
+
     if request.method == "POST":
-        staff.staf_nam = request.form.get("staf_nam")
-        staff.gender = request.form.get("gender")
-        staff.emerg_contat_no = request.form.get("emerg_contat_no")
-        staff.phon_no = request.form.get("phon_no")
-        staff.yers_of_work = request.form.get("yers_of_work")
-        staff.langugs_known = request.form.get("langugs_known")
-        staff.skiil_area = request.form.get("skiil_area")
+        # AdventureUser table
+        user.usrname = request.form.get("usrname")
+        user.usr_mail = request.form.get("usr_mail")
+        user.phone_no = request.form.get("phone_no")
+        user.county = request.form.get("county")
+        user.city_of_usr = request.form.get("city_of_usr")
+        # AdventureStaff table
+        staff.staf_nam = request.form.get("usrname")
+        staff.phon_no = request.form.get("phone_no")
+
         db.session.commit()
-        return redirect(url_for("staff_dashboard"))
+
+        return redirect(url_for("staff_itself_profile"))
     return render_template("edit_staff_profile.html",staff=staff)
+
 
 #staff can edit slots in manage trek
 @app.route("/staff_edit_trek/<int:trek_id>", methods=["GET", "POST"])
@@ -389,30 +362,59 @@ def staff_edit_trek(trek_id):
 
     if session.get("role") != "staff":
         return redirect(url_for("login"))
-
     trek = Adventure_route.query.get_or_404(trek_id)
+    # staf can edit but when booking is open
+    if trek.staf_fr_this_rout != session.get("user_id"):
+        return "you can't acces!"
+    # Staff can edit only when booking is Open and trek is Upcoming
+    if trek.track_status != "Upcoming":
+        return "you can edit slots"
+    if trek.status_open_close != "Open":
+        return "now u can't as booking is not open"
+    if trek.slot_request_status == "Pending":
+        return "u can't edit untill get approve"
+    if request.method == "POST":
+        new_slots = int(request.form.get("capcity"))
+        booked = len(trek.bookings)
+        if new_slots < booked:
+            return "Slots cannot be less than booked participants."
+        trek.requested_slots = new_slots
+        trek.slot_request_status = "Pending"
+        db.session.commit()
+        return redirect(url_for("staff_dashboard"))
+    return render_template("staff_edit_trek.html", trek=trek)
 
-    # Staff can edit only their own trek
+#staf manage trk in staff dashboard
+@app.route("/staff_manage_trek/<int:trek_id>", methods=["GET", "POST"])
+def staff_manage_trek(trek_id):
+    if session.get("role") != "staff":
+        return redirect(url_for("login"))
+    trek = Adventure_route.query.get_or_404(trek_id)
+    if trek.staf_fr_this_rout != session.get("user_id"):
+        return "Access Denied"
+    if request.method == "POST":
+        trek.track_status = request.form.get("track_status")
+        if trek.track_status == "Upcoming":
+            trek.status_open_close = request.form.get("booking_status")
+        else:
+            trek.status_open_close = "Close"
+        db.session.commit()
+        return redirect(url_for("staff_dashboard"))
+    return render_template("staff_manage_trek.html", trek=trek)
+
+#staff can se  participant
+@app.route("/staff_participants/<int:trek_id>")
+def staff_participants(trek_id):
+    if session.get("role") != "staff":
+        return redirect(url_for("login"))
+    staff = AdventureUser.query.get(session["user_id"])
+    trek = Adventure_route.query.get_or_404(trek_id)
     if trek.staf_fr_this_rout != session.get("user_id"):
         return "Access Denied"
 
-    if request.method == "POST":
+    bookings = AdventureBooking.query.filter_by(adv_rout_id=trek_id,booking_stat="Booked").all()
+    return render_template("staff_participants.html",staff=staff,trek=trek,bookings=bookings)
 
-        new_slots = int(request.form.get("capcity"))
-
-        booked = len(trek.bookings)
-
-        if new_slots < booked:
-            return "Slots cannot be less than booked participants."
-
-        trek.requested_slots = new_slots
-        trek.slot_request_status = "Pending"
-
-        db.session.commit()
-
-        return redirect(url_for("staff_dashboard"))
-
-    return render_template("staff_edit_trek.html", trek=trek)
 
 #route of current trek
 @app.route("/current_tracks")
@@ -423,39 +425,19 @@ def current_tracks():
     staff = AdventureUser.query.get(staff_id)
 
     # upcoming + ongoing
-    tracks = Adventure_route.query.filter(
-        Adventure_route.staf_fr_this_rout == staff_id,
-        Adventure_route.track_status.in_(["Upcoming", "Ongoing"])
-    ).all()
-
-    return render_template(
-        "current_track.html",
-        staff=staff,
-        tracks=tracks
-    )
-
+    tracks = Adventure_route.query.filter(Adventure_route.staf_fr_this_rout == staff_id,Adventure_route.track_status.in_(["Upcoming", "Ongoing"])).all()
+    return render_template("current_track.html",staff=staff,tracks=tracks)
 
 # close trek
 @app.route("/closed_tracks")
 def closed_tracks():
-
     staff_id = session.get("user_id")
-
     if not staff_id:
         return redirect(url_for("login"))
-
     staff = AdventureUser.query.get(staff_id)
+    tracks = Adventure_route.query.filter_by(staf_fr_this_rout=staff_id,track_status="Completed").all()
 
-    tracks = Adventure_route.query.filter_by(
-        staf_fr_this_rout=staff_id,
-        track_status="Completed"
-    ).all()
-
-    return render_template(
-        "closed_track.html",
-        staff=staff,
-        tracks=tracks
-    )
+    return render_template("closed_track.html",staff=staff,tracks=tracks)
 
 
 @app.route("/add_trek", methods=["GET", "POST"])     #add or edit by admin
@@ -480,23 +462,26 @@ def add_trek():
 
         strt_trck_date = datetime.strptime(strt_trck_date, "%Y-%m-%d").date()
         end_trck_date = datetime.strptime(end_trck_date, "%Y-%m-%d").date()
+        if remening_spots > capcity:
+            return "Remaining spots cannot be greater than capacity."
         if strt_trck_date < date.today():
             return "can't register this date"
 
         if end_trck_date < strt_trck_date:
             return "End trek date can't before start trek"
+        capcity = int(request.form.get("capcity"))
+        total_days_are = int(request.form.get("total_days_are"))
+        actual_days = (end_trck_date - strt_trck_date).days
+        if total_days_are > actual_days:
+            return "Total days cannot be greater than the difference between start date and end date."
+        
         #one staff can go in in trek
-        existing_trek = Adventure_route.query.filter(
-            Adventure_route.staf_fr_this_rout == staf_ref_id,
-            Adventure_route.strt_trck_date <= end_trck_date,
-            Adventure_route.end_trck_date >= strt_trck_date
-        ).first()
+        existing_trek = Adventure_route.query.filter(Adventure_route.staf_fr_this_rout == staf_ref_id,Adventure_route.strt_trck_date <= end_trck_date,Adventure_route.end_trck_date >= strt_trck_date).first()
 
         if existing_trek:
             return "this staff is already busy with other track"
         new_route = Adventure_route(
-            rout_name=rout_name,
-            staf_fr_this_rout=staf_ref_id,
+            rout_name=rout_name,staf_fr_this_rout=staf_ref_id,
             destination=destination,
             rout_type=rout_type,
             difficulty_level=difficulty_level,
@@ -524,74 +509,42 @@ def add_trek():
 def user_booking_table():
 # check login
     user_id = session.get("user_id")
-
     if not user_id:
         return redirect(url_for("login"))
-
     # get current user
     user = AdventureUser.query.get(user_id)
-
     # get bookings of current user
     bookings = AdventureBooking.query.filter_by(adv_usr_id=user_id).all()
-
-    return render_template(
-        "user_booking_table.html",
-        user=user,
-        bookings=bookings
-    )
-
-
-
+    return render_template("user_booking_table.html",user=user,bookings=bookings)
 
 
 #tracking table
 @app.route("/booking_table")
 def booking_table():
-
     if not session.get("user_id"):
         return redirect(url_for("login"))
-
     admin = AdventureUser.query.get(session.get("user_id"))
     search = request.args.get("search", "").strip()
+    query = AdventureBooking.query \
+        .join(AdventureBooking.user) \
+        .join(AdventureBooking.trek)
 
     if search:
-        bookings = AdventureBooking.query\
-            .join(AdventureBooking.user)\
-            .join(AdventureBooking.trek)\
-            .outerjoin(Adventure_route.staff)\
-            .filter(
-                (AdventureUser.usrname.ilike(f"%{search}%")) |
-                (Adventure_route.rout_name.ilike(f"%{search}%")) |
-                (Adventure_route.staff.has(
-                    AdventureUser.usrname.ilike(f"%{search}%")
-                ))
-            ).all()
-    else:
-        bookings = AdventureBooking.query.order_by(
-            AdventureBooking.reserved_on.desc()
-        ).all()
+        query = query.filter((AdventureUser.usrname.ilike(f"%{search}%")) | (Adventure_route.rout_name.ilike(f"%{search}%")))
 
-    return render_template(
-        "booking_table.html",
-        bookings=bookings,
-        admin=admin
-    )
+    bookings = query.order_by(AdventureBooking.reserved_on.desc()).all()
+    return render_template("booking_table.html",bookings=bookings,admin=admin)
 
 #route for status change from open to close
 @app.route("/change_track_status/<int:track_id>/<string:new_status>")
 def change_track_status(track_id, new_status):
-
     track = Adventure_route.query.get_or_404(track_id)
-
     track.track_status = new_status
-
     # if ongoing or completed then close booking
     if new_status in ["Ongoing", "Completed"]:
         track.status_open_close = "Close"
-
     else:
         track.status_open_close = "Open"
-
     db.session.commit()
     return redirect(url_for("manage_trek"))
 
@@ -609,39 +562,23 @@ def manage_staff():
     # approved staff
     approved_staff = AdventureUser.query.filter_by(rolee="staff",staf_satus="Approved").all()
     # blacklisted staff
-    blacklisted_staff = AdventureUser.query.filter_by(
-        rolee="staff",
-        staf_satus="Blacklisted"
-    ).all()
-
-    return render_template(
-        'manage_staff.html',
-        pending_staff=pending_staff,
-        approved_staff=approved_staff,
-        blacklisted_staff=blacklisted_staff,
-        active_tab=active_tab,
-        admin=admin
-    )
+    blacklisted_staff = AdventureUser.query.filter_by(rolee="staff",staf_satus="Blacklisted").all()
+    return render_template('manage_staff.html',pending_staff=pending_staff,approved_staff=approved_staff,blacklisted_staff=blacklisted_staff,active_tab=active_tab,admin=admin)
 
 #staf get reject by admin
 @app.route("/reject_staff/<int:staff_id>")
 def reject_staff(staff_id):
-
     # get staff
     staff = AdventureUser.query.get_or_404(staff_id)
-
     #check is there any trek assign to 
     assigned_trek = Adventure_route.query.filter_by(staf_fr_this_rout=staff.usr_ref_id).first()
-
     if assigned_trek:
         return "can't delete this staff directly first delete trek assigned to this staff"
-
-    # Blacklist the staff
+    # blacklst the staff
     staff.staf_satus = "Blacklisted"
     staff.is_blacklsted = True
 
     db.session.commit()
-
     return redirect(url_for("manage_staff", tab="blacklisted"))
 
 # manage user by admin
@@ -658,36 +595,25 @@ def manage_users():
     active_users = AdventureUser.query.filter_by(rolee="user",is_blacklsted=False).all()
     # blacklisted users
     blacklisted_users = AdventureUser.query.filter_by(rolee="user",is_blacklsted=True).all()
-
-    return render_template(
-        "manage_users.html",
-        active_users=active_users,
-        blacklisted_users=blacklisted_users,
-        active_tab=active_tab,
-        admin=admin,
-        active_page="manage_users"
-    )
+    return render_template("manage_users.html",active_users=active_users,blacklisted_users=blacklisted_users,active_tab=active_tab,admin=admin,active_page="manage_users")
 
 
 #blacklist user
 @app.route("/blacklist_user/<int:user_id>")
 def blacklist_user(user_id):
-
     user = AdventureUser.query.get_or_404(user_id)
     # Check if this staff is assigned to any trek
     if user.rolee == "staff":
         assigned_trek = Adventure_route.query.filter_by(staf_fr_this_rout=user.usr_ref_id).first()
         if assigned_trek:
             return "trek is assigned to this staff first delete trek then u can block this staff"
-
+        
     user.is_blacklsted = True
     db.session.commit()
     return redirect(url_for("manage_users",tab="blacklisted"))
 
 
-
-# REMOVE BLACKLIST
-
+# remove from black
 @app.route("/unblacklist_user/<int:user_id>")
 def unblacklist_user(user_id):
     user = AdventureUser.query.get_or_404(user_id)
@@ -706,51 +632,25 @@ def user_profile(user_id):
     # selected user
     user = AdventureUser.query.get_or_404(user_id)
     # bookings of user
-    user_bookings = AdventureBooking.query.filter_by(
-        adv_usr_id=user_id
-    ).all()
-
-    return render_template(
-        "user_profile.html",
-        user=user,
-        user_bookings=user_bookings,
-        admin=admin,
-        active_page="manage_users"
-    )
-
-
+    user_bookings = AdventureBooking.query.filter_by(adv_usr_id=user_id).all()
+    return render_template("user_profile.html",user=user,user_bookings=user_bookings,admin=admin,active_page="manage_users")
 
 
 #staff profile 
 @app.route("/staff_profile/<int:staff_id>")
 def staff_profile(staff_id):
     admin_id = session.get("user_id")
-
     if not admin_id:
         return redirect(url_for("login"))
-
     admin = AdventureUser.query.get(admin_id)
-
     # selected staff user
     staff = AdventureUser.query.get_or_404(staff_id)
-
     # extra staff profile info
-    staff_profile = Adventure_Staff.query.filter_by(
-        usr_ref_id=staff_id
-    ).first()
-
+    staff_profile = Adventure_Staff.query.filter_by(usr_ref_id=staff_id).first()
     # assigned tracks
-    staff_tracks = Adventure_route.query.filter_by(
-        staf_fr_this_rout=staff.usr_ref_id
-    ).all()
+    staff_tracks = Adventure_route.query.filter_by(staf_fr_this_rout=staff.usr_ref_id).all()
 
-    return render_template(
-        "staff_profile.html",
-        staff=staff,
-        admin=admin,
-        staff_tracks=staff_tracks,
-        staff_profile=staff_profile
-    )
+    return render_template("staff_profile.html",staff=staff,admin=admin,staff_tracks=staff_tracks,staff_profile=staff_profile)
 
 
 # staf get approve by admin
@@ -794,52 +694,41 @@ def manage_trek():
         treks = Adventure_route.query.filter(
                 (Adventure_route.rout_name.ilike(f"%{search}%")) |
                 (Adventure_route.destination.ilike(f"%{search}%")) |
-                (AdventureUser.usrname.ilike(f"%{search}%"))
-        ).all()
+                (AdventureUser.usrname.ilike(f"%{search}%"))).all()
     else:
         treks = Adventure_route.query.all()
-    
     pending_requests = Adventure_route.query.filter_by(slot_request_status="Pending").all()
         
     return render_template('manage_trek.html',treks=treks,admin=admin,pending_requests=pending_requests)
 
 
-
 #admin edit/ add trek
 @app.route("/edit_trek/<int:trek_id>", methods=["GET", "POST"])
 def edit_trek(trek_id):
-
     trek = Adventure_route.query.get_or_404(trek_id)
-
     if request.method == "POST":
-
         trek.rout_name = request.form.get("rout_name")
         trek.destination = request.form.get("destination")
         trek.difficulty_level = request.form.get("difficulty_level")
-
         trek.capcity = int(request.form.get("capcity"))
-
-        trek.remening_spots = int(
-            request.form.get("remening_spots")
-        )
+        trek.remening_spots = int(request.form.get("remening_spots"))     
 
         db.session.commit()
         return redirect(url_for("manage_trek"))
-    return render_template(
-        "edit_trek.html",
-        trek=trek
-    )
+    return render_template("edit_trek.html",trek=trek)
 
-#aprove route if staff edit trek slot
+#approve slot
 @app.route("/approve_slot_request/<int:trek_id>")
 def approve_slot_request(trek_id):
+    if session.get("role") != "admin":
+        return redirect(url_for("login"))
     trek = Adventure_route.query.get_or_404(trek_id)
-    trek.capcity = trek.requested_slots
-    booked = len(trek.bookings)
-    trek.remening_spots = trek.capcity - booked
-    trek.slot_request_status = "Approved"
-    trek.requested_slots = None
-    db.session.commit()
+    if trek.slot_request_status == "Pending":
+        trek.capcity = trek.requested_slots
+        trek.remening_spots = trek.capcity - len(trek.bookings)
+        trek.requested_slots = None
+        trek.slot_request_status = "Approved"
+        db.session.commit()
     return redirect(url_for("manage_trek"))
 
 
@@ -860,18 +749,6 @@ def delete_trek(trek_id):
     db.session.commit()
     return redirect(url_for("manage_trek"))
 
-#user can browese/search trek 
-@app.route("/browse_treks")
-def browse_treks():
-    user_id = session.get("user_id")
-    if not user_id:
-        return redirect(url_for("login"))
-    # here id of current user
-    user = AdventureUser.query.get(user_id)
-    #all trek will here
-    treks = Adventure_route.query.all()
-    return render_template("browse_treks.html",user=user,treks=treks)
-
 #user can see or book trek here
 @app.route("/trek_details/<int:trek_id>")
 def trek_details(trek_id):
@@ -885,28 +762,87 @@ def trek_details(trek_id):
     bookings = AdventureBooking.query.filter_by( adv_rout_id=trek_id ).all()
     return render_template("trek_details.html", trek=trek,assigned_staff=assigned_staff, bookings=bookings )
         
-#user can see which trek on which days and that trek i complete or what
-@app.route("/trek_history")
-def trek_history():
-
+#user can see all trek 
+@app.route("/all_tracks")
+def all_tracks():
     user_id = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("login"))
+    user = AdventureUser.query.get(user_id)
+    location = request.args.get("location")
+    difficulty = request.args.get("difficulty", "")
+    query = Adventure_route.query
 
+    if location:
+        query = query.filter(Adventure_route.destination.ilike(f"%{location}%"))
+    if difficulty:
+        query = query.filter(Adventure_route.difficulty_level == difficulty)
+    treks = query.all()
+    my_bookings = AdventureBooking.query.filter_by(adv_usr_id=user_id).all()
+
+    booked_trek_ids = [
+        booking.adv_rout_id
+        for booking in my_bookings
+        if booking.booking_stat == "Booked"
+    ]
+    return render_template("all_tracks.html",user=user,treks=treks,my_bookings=my_bookings,booked_trek_ids=booked_trek_ids)
+
+
+#user all trek histry
+@app.route("/user_trek_history")
+def user_trek_history():
+    user_id = session.get("user_id")
     if not user_id:
         return redirect(url_for("login"))
 
-    # current user
     user = AdventureUser.query.get(user_id)
+    history = AdventureBooking.query\
+        .join(Adventure_route)\
+        .filter(AdventureBooking.adv_usr_id == user_id,Adventure_route.track_status == "Completed").all()
 
-    # completed bookings only
-    history = AdventureBooking.query.filter_by(
-        adv_usr_id=user_id
-    ).all()
+    return render_template("user_trek_history.html",user=user,history=history)
 
-    return render_template(
-        "trek_history.html",
-        user=user,
-        history=history
-    )
+
+#user profile
+@app.route("/my_profile")
+def my_profile():
+    if session.get("role") != "user":
+        return redirect(url_for("login"))
+    user = AdventureUser.query.get(session.get("user_id"))
+    return render_template("my_profile.html",user=user)
+
+
+#user can edit its profile
+@app.route("/edit_profile_user", methods=["GET", "POST"])
+def edit_profile_user():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("login"))
+    user = AdventureUser.query.get(user_id)
+    if request.method == "POST":
+        user.usrname = request.form.get("usrname")
+        user.usr_mail = request.form.get("usr_mail")
+        user.phone_no = request.form.get("phone_no")
+        user.gender = request.form.get("gender")
+        user.city_of_usr = request.form.get("city_of_usr")
+        user.county = request.form.get("county")
+        db.session.commit()
+
+        return redirect(url_for("my_profile"))
+    return render_template("edit_profile_user.html", user=user)
+
+#user current trek
+@app.route("/user_current_tracks")
+def user_current_tracks():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("login"))
+    user = AdventureUser.query.get(user_id)
+    current_tracks = Adventure_route.query.filter_by(status_open_close="Open").all()
+
+    return render_template("user_current_tracks.html",user=user,current_tracks=current_tracks)
+
+
 
 #logout get to login page
 @app.route("/logout")
