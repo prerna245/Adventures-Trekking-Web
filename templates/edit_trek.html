@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Adventrues Trek</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#b5b9be;
+        }
+
+        .main-container{
+            width:100%;
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:40px;
+        }
+
+        .form-box{
+            width:500px;
+            background:rgb(91,132,154);
+            padding:35px;
+            border-radius:15px;
+            border:2px solid #12385b;
+            box-shadow:0 6px 18px rgba(0,0,0,.2);
+        }
+
+        .form-box h2{
+            text-align:center;
+            margin-bottom:25px;
+            color:#111827;
+        }
+
+        .form-group{
+            margin-bottom:18px;
+        }
+
+        .form-group label{
+            display:block;
+            margin-bottom:8px;
+            font-weight:bold;
+            color:#111827;
+        }
+
+        .form-group input{
+            width:100%;
+            padding:12px;
+            border:1px solid #bbb;
+            border-radius:8px;
+            font-size:15px;
+        }
+
+        .form-group input:focus{
+            outline:none;
+            border:2px solid #12385b;
+        }
+
+        .button-box{
+            display:flex;
+            gap:15px;
+            margin-top:25px;
+        }
+
+        .update-butn{
+            flex:1;
+            padding:12px;
+            background:#12385b;
+            color:white;
+            border:none;
+            border-radius:8px;
+            font-size:16px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        .update-butn:hover{
+            background:#1c4d78;
+        }
+        .back-butn{
+            flex:1;
+            text-decoration:none;
+            text-align:center;
+            padding:12px;
+            background:#3c4c5a;
+            color:white;
+            border-radius:8px;
+            font-weight:bold;
+        }
+        .back-butn:hover{
+            background:#555;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="form-box">
+            <h2>Edit Adventure Trek</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label>Trek Name</label>
+                    <input type="text"name="rout_name"value="{{ trek.rout_name }}">
+                </div>
+                <div class="form-group">
+                    <label>Destination</label>
+                    <input type="text"name="destination"value="{{ trek.destination }}">
+                </div>
+                <div class="form-group">
+                    <label>Difficulty</label>
+                    <input type="text"name="difficulty_level"value="{{ trek.difficulty_level }}">
+                </div>
+                <div class="form-group">
+                    <label>Capacity</label>
+                    <input type="number"name="capcity"value="{{ trek.capcity }}">
+                </div>
+                <div class="form-group">
+                    <label>Remaining Spots</label>
+                    <input type="number"name="remening_spots"value="{{ trek.remening_spots }}">
+                </div>
+                <div class="button-box">
+                    <button type="submit" class="update-butn">Update Trek</button>
+                    <a href="{{ url_for('manage_trek') }}" class="back-butn">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+    }
+    body{
+        background:#bdb2b2;
+    }
+    .main-content{
+        display:flex;
+        min-height:100vh;
+    }
+    /*side bar box */
+    .side-bar{ 
+        width:240px; 
+        background:rgb(91, 132, 154); 
+        border-right:1px solid #070404; 
+        padding:20px; 
+    } 
+    .side-bar h2{ 
+        font-size:22px; 
+        font-weight:bold; 
+        margin-bottom:30px; 
+        color:#111827; 
+        text-align:left; 
+    } 
+    .side-bar-links{ 
+        display:flex; 
+        flex-direction:column; 
+        gap:10px; 
+    } 
+    .side-bar-links a{ 
+        text-decoration:none; 
+        padding:14px; 
+        border-radius:10px; 
+        color:#0a0c0c; 
+        font-size:16px; 
+        font-weight:600; 
+        transition:0.3s; 
+    } 
+    .side-bar-links a:hover{ 
+        background:#12385b; 
+        color:white; 
+    } 
+    .active-link{ 
+        background:#12385b; 
+        color:white !important; }
+    /* contents */
+    .all-content{
+        flex:1;
+        padding:20px;
+    }
+    /* head after nav */
+    .top-bar{
+        background:rgb(91, 132, 154);
+        padding:18px 25px;
+        border-radius:12px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:20px;
+        border:1px solid #0c616e;
+    }
+    .top-bar h1{
+        font-size:24px;
+        color:#06090f;
+    }
+    .user-name{
+        font-weight:bold;
+        font-size: 16px;
+    }
+    /* 1st box and 2nd box available trek and my boking */
+    .two-box{
+        background:rgb(91, 132, 154);
+        padding:25px;
+        border-radius:10px;
+        margin-bottom:30px;
+    }
+    .two-box h2{
+        margin-bottom:25px;
+    }
+    /* table*/
+    table{
+        width:100%;
+        border-collapse:collapse;
+    }
+    table thead{
+        background:#28627b;
+    }
+    table th{
+        padding:15px;
+        text-align:left;
+    }
+    table td{
+        padding:15px;
+        border-top:1px solid #eee;
+    }
+    /* book-buton */
+    .book-butn{
+        text-decoration:none;
+        background:#12385b;
+        color:white;
+        padding:8px 14px;
+        border-radius:5px;
+        font-size:14px;
+    }
+    .book-butn:hover{
+        background:#2d9bc2;
+    }
+    /* show status book or not */
+    .booked{
+        color:rgb(10, 72, 10);
+        font-weight:bold;
+    }
+    .already-booked{
+        background:#6b7280;
+        color:white;
+        padding:8px 14px;
+        border-radius:5px;
+        font-size:14px;
+        display:inline-block;
+        font-weight:bold;
+    }
+    .pending{
+        color:rgb(180, 128, 32);
+        font-weight:bold;
+    }
+    .cancel{
+        color:rgb(148, 35, 35);
+        font-weight:bold;
+    }
+</style>
+<div class="main-content">
+    <!-- sid bar of user -->
+    <div class="side-bar">
+        <h2>Adventrues User</h2>
+        <div class="side-bar-links">
+            <a href="{{ url_for('user_dashboard') }}"class="active-link">Dashboard</a>
+            <a href="{{ url_for('my_profile') }}">My profile</a>
+            <a href="{{ url_for('user_booking_table') }}">My Bookings</a>
+            <a href="{{ url_for('all_tracks') }}">All treks</a>
+            <a href="{{ url_for('user_current_tracks') }}">Current Tracks</a>
+            <a href="{{ url_for('user_trek_history') }}">My Trek History</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+    <!--content-->
+    <div class="all-content">
+        <!-- head after nav -->
+        <div class="top-bar">
+            <h1>Trekking Management Application</h1>
+            <div class="user-name">{{ user.usrname }}</div>
+        </div>
+        <!-- welcome user -->
+        <div style="margin-bottom:25px;">
+            <h1>Welcome, {{ user.usrname }}!</h1>
+        </div>
+        <!-- div of table available trek -->
+        <div class="two-box">
+            <h2>Available Treks</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trek Name</th>
+                        <th>Location</th>
+                        <th>Difficulty</th>
+                        <th>Duration</th>
+                        <th>Available Slots</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for trek in treks %}
+                    <tr>
+                        <td>{{ trek.rout_name }}</td>
+                        <td>{{ trek.destination }}</td>                        
+                        <td>{{ trek.difficulty_level }}</td>
+                        <td>{{ trek.total_days_are }} Days</td>
+                        <td>{{ trek.remening_spots }}</td>
+                        <td>
+                        {% if trek.adv_rout_id in booked_trek_ids %}
+                            <span class="booked">Already Booked</span>
+                        {% elif trek.remening_spots <= 0 %}
+                            <span class="cancel">Full</span>
+                        {% else %}
+                            <a href="{{ url_for('book_trek', trek_id=trek.adv_rout_id) }}"class="book-butn">Book Now</a>
+                        {% endif %}
+                    </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!--table of my booking section -->
+        <div class="two-box">
+            <h2>My Bookings</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trek Name</th>
+                        <th>Booking Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for booking in my_bookings %}
+                    <tr>
+                        <td>{{ booking.trek.rout_name }}</td>
+                        <td>{{ booking.reserved_on.strftime('%d %b %Y') }}</td>
+                        <td>
+                            {% if booking.booking_stat == "Booked" %}
+                                <span class="booked">{{ booking.booking_stat }}</span>
+                            {% elif booking.booking_stat == "Pending" %}
+                                <span class="pending">{{ booking.booking_stat }}</span>
+                            {% else %}
+                                <span class="cancel">{{ booking.booking_stat }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

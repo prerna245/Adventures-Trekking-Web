@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>profile of user</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+        body{
+            background:#939eb3;
+        }
+        /* main context */
+        .main-content{
+            width:95%;
+            margin:30px auto;
+        }
+        /* two box profile and trek */
+        .box{
+            background:rgb(91, 132, 154);
+            padding:25px;
+            border-radius:14px;
+            border:1px solid #0f4e5c;
+            margin-bottom:25px;
+        }
+        /* HEADING */
+        .box h2{
+            margin-bottom:20px;
+            color:#0b101a;
+        }
+        /* button of back to dashbord */
+        .back-butn{
+            display:inline-block;
+            margin-bottom:20px;
+            padding:10px 18px;
+            background:#12385b;
+            color:rgb(211, 205, 205);
+            text-decoration:none;
+            border-radius:8px;
+            font-weight:bold;
+        }
+        .back-butn:hover{
+            background:#1a3e5e;
+        }
+        /* profile table */
+        .profil-table{
+            width:100%;
+            border-collapse:collapse;
+        }
+        .profil-table th{
+            width:220px;
+            text-align:left;
+            padding:15px;
+            background:#26536e;
+        }
+        .profil-table td{
+            padding:15px;
+            border-top:1px solid #0e477c;
+        }
+        /* traking record table of user */
+        .track-table{
+            width:100%;
+            border-collapse:collapse;
+        }
+        .track-table thead{
+            background:#26536e;
+        }
+        .track-table th{
+            padding:15px;
+            text-align:left;
+        }
+        .track-table td{
+            padding:15px;
+            border-top:1px solid #eee;
+        }
+        /* active status */
+        .active{
+            color:rgb(24, 117, 24);
+            font-weight:bold;
+        }
+
+        .blocked{
+            color:rgb(126, 23, 23);
+            font-weight:bold;
+        }
+
+        .open{
+            color:rgb(26, 135, 26);
+            font-weight:bold;
+        }
+
+        .close{
+            color:rgb(125, 40, 40);
+            font-weight:bold;
+        }
+        
+        .edit-butn{
+            display:inline-block;
+            margin-bottom:20px;
+            padding:10px 18px;
+            background:#12385b;
+            color:white;
+            text-decoration:none;
+            border-radius:8px;
+            font-weight:bold;
+        }
+
+        .edit-butn:hover{
+            background:#5180ac;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <!--back buton-->
+        <a href="{{ url_for('manage_users') }}"class="back-butn">Back To Dashboard</a>
+        <!-- profile table -->
+        <div class="box">
+            <h2>My Profile</h2>
+            <table class="profil-table">
+                <tr>
+                    <th>User ID</th>
+                    <td>{{ user.usr_ref_id }}</td>
+                </tr>
+                <tr>
+                    <th>Username</th>
+                    <td>{{ user.usrname }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ user.usr_mail }}</td>
+                </tr>
+                <tr>
+                    <th>Phone Number</th>
+                    <td>{{ user.phone_no }}</td>
+                </tr>
+                <tr>
+                    <th>Gender</th>
+                    <td>{{ user.gender }}</td>
+                </tr>
+                <tr>
+                    <th>City</th>
+                    <td>{{ user.city_of_usr }}</td>
+                </tr>
+                <tr>
+                    <th>Country</th>
+                    <td>{{ user.county }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        {% if user.is_blacklsted %}
+                            <span class="blocked">Blocked</span>
+                        {% else %}
+                            <span class="active">Active</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- booked trek table  -->
+        <div class="box">
+            <h2>My Trek Details</h2>
+            <table class="track-table">
+                <thead>
+                    <tr>
+                        <th>Track ID</th>
+                        <th>Track Name</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Track Status</th>
+                        <th>Price</th>
+                        <th>Active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in user_bookings %}
+                    <tr>
+                        <td>{{ booking.trek.adv_rout_id }}</td>
+                        <td>{{ booking.trek.rout_name }}</td>
+                        <td>{{ booking.trek.strt_trck_date }}</td>
+                        <td>{{ booking.trek.end_trck_date }}</td>
+                        <td>{{ booking.trek.track_status }}</td>
+                        <td>Rs {{ booking.trek.rout_price }}</td>
+                        <td>
+                            {% if booking.trek.status_open_close == "Open" %}
+                                <span class="open">Open</span>
+                            {% else %}
+                                <span class="close">Close</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

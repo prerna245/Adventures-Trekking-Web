@@ -1,0 +1,124 @@
+
+{% extends "base.html" %}
+{% block content %}
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial, Helvetica, sans-serif;
+    }
+    body{
+        background:#b2b6bb;
+    }
+    .main-content{
+        width:100%;
+        min-height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        padding:40px;
+    }
+    .profile-box{
+        width:100%;
+        max-width:800px;
+        background:rgb(40, 113, 116);
+        padding:35px;
+        border-radius:15px;
+        box-shadow:0 4px 15px rgba(0,0,0,0.08);
+    }
+    .profile-box h1{
+        margin-bottom:30px;
+        color:#e4e7e8;
+        text-align:center;
+    }
+    .form-group{
+        margin-bottom:20px;
+    }
+    .form-group label{
+        display:block;
+        margin-bottom:8px;
+        font-weight:bold;
+        color:#050608;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select{
+        width:100%;
+        padding:14px;
+        border:1px solid #b0c9cc;
+        border-radius:8px;
+        font-size:15px;
+    }
+    .form-group textarea{
+        resize:none;
+        height:100px;
+    }
+    .butn-box{
+            display:flex;
+            gap:15px;
+            margin-top:25px;
+    }
+    .save-butn{
+        padding:12px 22px;
+        border:none;
+        background:#12385b;
+        color:rgb(228, 219, 219);
+        border-radius:8px;
+        font-size:15px;
+        cursor:pointer;
+        font-weight:bold;
+    }
+    .save-butn:hover{
+        background:#12385b;
+    }
+    .back-butn{
+        padding:12px 22px;
+        background:#12385b;
+        color:white;
+        text-decoration:none;
+        border-radius:8px;
+        font-weight:bold;
+    }
+    .back-butn:hover{
+        background:#26547d;
+    }
+</style>
+<div class="main-content">
+    <div class="profile-box">
+        <h1>Edit Staff Profile</h1>
+        <form method="POST">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="usrname" value="{{ staff.user.usrname }}">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="usr_mail" value="{{ staff.user.usr_mail }}">
+            </div>
+
+            <div class="form-group">
+                <label>Contact Number</label>
+                <input type="text" name="phone_no" value="{{ staff.user.phone_no }}">
+            </div>
+
+            <div class="form-group">
+                <label>Country</label>
+                <input type="text" name="county" value="{{ staff.user.county }}">
+            </div>
+
+            <div class="form-group">
+                <label>City</label>
+                <input type="text" name="city_of_usr" value="{{ staff.user.city_of_usr }}">
+            </div>
+            <div class="butn-box">
+                <button type="submit" class="save-butn">Save Profile</button>
+                <a href="{{ url_for('staff_itself_profile') }}"class="back-butn">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+

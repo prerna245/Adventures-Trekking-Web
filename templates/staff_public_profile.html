@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial, Helvetica, sans-serif;
+    }
+    body{
+        background:#bcbdc0;
+    }
+    .main-content{
+        width:95%;
+        max-width:900px;
+        margin:30px auto;
+    }
+    .page-head{
+        background:rgb(91,132,154);
+        padding:20px;
+        border-radius:12px;
+        border:2px solid black;
+        margin-bottom:25px;
+    }
+    .page-head h1{
+        color:#111827;
+        font-size:30px;
+    }
+    .box{
+        background:rgb(91,132,154);
+        padding:25px;
+        border-radius:14px;
+        border:2px solid black;
+    }
+    .profile-table{
+        width:100%;
+        border-collapse:collapse;
+        background:#4e7b8b;
+    }
+    .profile-table th{
+        width:250px;
+        text-align:left;
+        padding:15px;
+        background:#8ca9b3;
+        border:1px solid #124b68;
+    }
+    .profile-table td{
+        padding:15px;
+        border:1px solid #124b68;
+    }
+    .button-area{
+        text-align:center;
+        margin-top:30px;
+    }
+    .back-butn{
+        display:inline-block;
+        text-decoration:none;
+        background:#0c4859;
+        color:white;
+        padding:12px 35px;
+        border-radius:8px;
+        font-size:18px;
+        font-weight:bold;
+        transition:.3s;
+    }
+    .back-butn:hover{
+        background:#1f7c88;
+    }
+
+</style>
+<div class="main-content">
+    <!--head-->
+    <div class="page-head">
+        <h1>Information About Staff</h1>
+    </div>
+    <!--staff info-->
+    <div class="box">
+        <table class="profile-table">
+            <tr>
+                <th>Staff ID</th>
+                <td>{{ staff.usr_ref_id }}</td>
+            </tr>
+            <tr>
+                <th>Full Name</th>
+                <td>{{ staff.usrname }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ staff.usr_mail }}</td>
+            </tr>
+            <tr>
+                <th>Contact Number</th>
+                <td>{{ staff.phone_no }}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{ staff.county }}</td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>{{ staff.city_of_usr }}</td>
+            </tr>
+        </table>
+        <div class="button-area">
+            <a href="{{ url_for('all_tracks') }}" class="back-butn">Back to All Tracks
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

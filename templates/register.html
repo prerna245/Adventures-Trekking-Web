@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .fist-box{
+        margin-top: 40px;
+    }
+    body{
+        margin: 0;
+        padding: 0;
+        background-image: url("/static/image(4).jpg");
+        background-size: cover;      
+        background-position: center;
+    }
+
+    .log-form-box {
+        width: 600px;
+        height: 800px;
+        border: 2px solid rgb(11, 59, 67);
+        border-radius: 20px;
+        margin: 20px auto;
+        padding: 15px;
+        background-color: rgb(117, 165, 173);
+    }
+
+    .log {
+        text-align: center;
+        text-decoration: double;
+        margin-bottom: 0px;
+        margin-top: 0px;
+    }
+
+    .fom-iner-content{
+        margin-bottom: 5px;
+    }
+
+    .fom-iner-content label {
+        font-size: 14px;
+        display: block;
+        text-align: left;
+        margin-top: 10px;
+    }
+
+    .fom-iner-content input {
+        width: 350px;
+        padding: 10px;
+        border: 2px solid black;
+        border-radius: 5px;
+        
+        font-size: 13px;
+
+    }
+    .optn select{
+        height: 35px;
+        width: 170px;
+        border: 2px solid black;
+        background-color: rgb(83, 133, 142);
+        text-align: center;
+        font-size: medium;
+        margin-top: 15px;
+    }
+
+    .log-butn {
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+        background-color: #2c3e50;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .reg-butn {
+        margin-top: 22px;
+        text-align: center;
+        font-size: 15px;
+    }
+</style>
+<div class="fist-box">
+    <div class="log-form-box">
+        <h2 class="log">Register Form</h2>
+        <form method="post">
+            <div class="fom-iner-content">
+                <label>Enter Your Name</h2></label>
+                <input type="text" name="name" placeholder="Enter your first name"required>
+            </div>
+            <div class="fom-iner-content">
+                <label>Phone number</label>
+                <input type="text" name="ph_number" minlength="10" maxlength="10" placeholder="Enter phone number" required>
+            </div>
+            <div class="fom-iner-content">
+                <label for="email">Email Address</label>
+                <input type="email" name="email" placeholder="Enter your email id" required>
+            </div>
+            <div class="fom-iner-content">
+                <label>State</label>
+                <input type="text" name="state" placeholder="Enter your state" required>
+            </div>
+            <div class="fom-iner-content">
+                <label>City</label>
+                <input type="text" name="city" placeholder="Enter your city" required>
+            </div>
+            <div class="fom-iner-content">
+                <label>Country</label>
+                <input type="text" name="country" placeholder="Enter your country" required>
+            </div>
+            <div class="fom-iner-content">
+                <label>Adventure Experience</label>
+                <input type="text" name="experience"
+                    placeholder="eg.. 1, 2 ,3 year or 0 year">
+            </div>
+            <div class="fom-iner-content">
+                <label>Medical Issues (Optional)</label>
+                <input type="text" name="medical_issue"
+                    placeholder="Mention any medical issue(if any)">
+            </div>
+            <div class="fom-iner-content">
+                <label for="password">Enter Password</label>
+                <input type="password" name="password"placeholder="Enter your password" required>
+            </div>
+            <div class="optn">
+                <select name="role" required>
+                    <option value="">Select Role</option>
+                    <option value="user">User</option>
+                    <option value="staff">staff</option>
+                </select>
+            </div>
+            <button type="submit" class="log-butn">Sign In</button>
+        </form>
+        <div class="reg-butn">
+            <span>Are you already registered ? Nice got to   </span>
+            <a href="{{ url_for('login') }}">Login</a>
+        </div>
+        <a href="{{ url_for('index') }}" >Back To Home</a>
+    </div>
+</div>
+
+
+{% endblock %}
