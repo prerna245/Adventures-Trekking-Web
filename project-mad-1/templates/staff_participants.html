@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial,sans-serif;
+    }
+
+    body{
+        background:#939eb3;
+    }
+
+    .content{
+        display:flex;
+        min-height:100vh;
+    }
+
+    /* Sidebar table */
+
+    .sid-bar{
+        width:240px;
+        background:rgb(91,132,154);
+        padding:20px;
+    }
+
+    .sid-bar h2{
+        margin-bottom:30px;
+    }
+
+    .sid-bar a{
+        display:block;
+        text-decoration:none;
+        color:black;
+        padding:14px;
+        border-radius:10px;
+        margin-bottom:10px;
+        font-weight:bold;
+    }
+
+    .sid-bar a:hover{
+        background:#12385b;
+        color:white;
+    }
+
+    .active{
+        background:#12385b;
+        color:white!important;
+    }
+
+    /* Main */
+
+    .main{
+        flex:1;
+        padding:30px;
+    }
+
+    .topbar{
+        background:rgb(91,132,154);
+        padding:18px;
+        border-radius:10px;
+        display:flex;
+        justify-content:space-between;
+        margin-bottom:30px;
+    }
+
+    .table-box{
+        background:rgb(91,132,154);
+        padding:20px;
+        border-radius:10px;
+    }
+
+    table{
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    th{
+        background:#12385b;
+        color:white;
+        padding:15px;
+    }
+
+    td{
+        padding:15px;
+        border-bottom:1px solid white;
+    }
+
+    .butn{
+        padding:8px 15px;
+        border-radius:6px;
+        color:white;
+        text-decoration:none;
+    }
+
+    .blacklist{
+        background:#b22222;
+    }
+
+    .back{
+        background:#0b566d;
+        margin-bottom:20px;
+        display:inline-block;
+    }
+
+</style>
+<div class="content">
+    <div class="sid-bar">
+    <h2>Adventureus Staff</h2>
+    <a href="{{ url_for('staff_dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('current_tracks') }}">Current Assign Trek</a>
+    <a href="{{ url_for('closed_tracks') }}">Closed Treks</a>
+    <a href="{{ url_for('staff_itself_profile') }}">Profile</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+<div class="main">
+    <!--heading of pag-->
+    <div class="topbar">
+        <h2>Participants - {{ trek.rout_name }}</h2>
+        <div>{{ staff.usrname }}</div>
+        </div>
+        <a class="butn back"
+        href="{{ url_for('staff_manage_trek', trek_id=trek.adv_rout_id) }}">Back</a>
+        <div class="table-box">
+            <!--table of user book trek-->
+            <table>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Country</th>
+                    <th>Status</th>
+                </tr>
+                {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.user.usrname }}</td>
+                    <td>{{ booking.user.usr_mail }}</td>
+                    <td>{{ booking.user.phone_no }}</td>
+                    <td>{{ booking.user.county }}</td>
+                    <td>{{ booking.booking_stat }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

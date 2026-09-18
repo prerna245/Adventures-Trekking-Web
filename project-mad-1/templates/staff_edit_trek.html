@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial, Helvetica, sans-serif;
+    }
+
+    body{
+        background:#b5b9be;
+    }
+
+    .content{
+        width:100%;
+        min-height:80vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        padding:40px;
+    }
+
+    .edit-box{
+        width:500px;
+        background:rgb(91,132,154);
+        padding:35px;
+        border-radius:15px;
+        border:2px solid black;
+        box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .edit-box h2{
+        text-align:center;
+        margin-bottom:25px;
+        color:#111827;
+        font-size:30px;
+    }
+
+    .trek-name{
+        background:#d9e7ec;
+        padding:12px;
+        border-radius:8px;
+        margin-bottom:25px;
+        font-size:18px;
+        font-weight:bold;
+        border:1px solid #6b7280;
+    }
+
+    .edit-box label{
+        display:block;
+        margin-bottom:10px;
+        font-size:18px;
+        font-weight:bold;
+        color:#111827;
+    }
+
+    .edit-box input{
+        width:100%;
+        padding:12px;
+        border:1px solid #444;
+        border-radius:8px;
+        font-size:17px;
+        margin-bottom:25px;
+        outline:none;
+    }
+
+    .edit-box input:focus{
+        border:2px solid #1d4ed8;
+    }
+
+    .button-group{
+        display:flex;
+        justify-content:center;
+        gap:20px;
+        margin-top:10px;
+    }
+
+    .save-butn,
+    .back-butn{
+        text-decoration:none;
+        border:none;
+        padding:12px 28px;
+        border-radius:8px;
+        font-size:17px;
+        font-weight:bold;
+        cursor:pointer;
+        transition:.3s;
+    }
+
+    .save-butn{
+        background:#053e5b;
+        color:white;
+    }
+
+    .save-butn:hover{
+        background:#1d5e8d;
+    }
+
+    .back-butn{
+        background:#6b7280;
+        color:white;
+    }
+
+    .back-butn:hover{
+        background:#4b5563;
+    }
+</style>
+<div class="content">
+    <div class="edit-box">
+        <h2>Edit Trek Slots</h2>
+        <form method="POST">
+            <div class="trek-name">Trek : {{ trek.rout_name }}</div>
+            <label>Total Slots</label>
+            <input type="number"name="capcity"value="{{ trek.capcity }}"min="{{ trek.bookings|length }}"required>
+            <div class="button-group">
+                <button type="submit" class="save-butn">Send Request</button>
+                <a href="{{ url_for('staff_dashboard') }}" class="back-butn">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
