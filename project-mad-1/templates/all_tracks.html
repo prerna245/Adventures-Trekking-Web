@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: #a0a4aa;
+    }
+
+    .content{
+        width:90%;
+        margin:30px auto;
+    }
+
+    .top-bar {
+        background: rgb(91,132,154);
+        padding: 18px 25px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .top-bar h1 {
+        font-size: 22px;
+    }
+
+    .user-name {
+        font-weight: bold;
+    }
+
+
+    .history-box {
+        background: rgb(91,132,154);
+        border-radius: 10px;
+        padding: 25px;
+    }
+
+    .history-title {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+    .type-box{
+        margin-bottom:25px;
+    }
+
+    .type-box form{
+        display:flex;
+        gap:12px;
+        align-items:center;
+    }
+
+    .type-box input{
+        width:300px;
+        padding:10px;
+        border:1px solid #999;
+        border-radius:6px;
+    }
+    .difficulty-select{
+        width:180px;
+        padding:10px;
+        border:1px solid #999;
+        border-radius:6px;
+        background:rgb(194, 187, 187);
+        font-size:15px;
+    }
+
+    .search-butn{
+        background:#0b566d;
+        color:white;
+        border:none;
+        padding:10px 18px;
+        border-radius:6px;
+        cursor:pointer;
+    }
+
+    .clear-butn{
+        background:#5e4e66;
+        color:white;
+        text-decoration:none;
+        padding:10px 18px;
+        border-radius:6px;
+    }
+
+    .view-butn{
+        background:#194855;
+        color:white;
+        padding:8px 14px;
+        border-radius:5px;
+        text-decoration:none;
+    }
+    .complet {
+        color: #a0a4aa;
+    }
+    
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table th{
+        padding: 16px;
+        border: 1px solid #1d707b;
+        text-align: center;
+    }
+    table td{
+        padding: 16px;
+        border: 1px solid #0d5c66;
+        text-align: center;
+        background-color: rgb(77, 144, 159);
+    }
+
+    table th {
+        background: #185365;
+    }
+
+    .complet {
+        color: rgb(1, 65, 33);
+        font-weight: bold;
+    }
+
+    .pending {
+        color: orange;
+        font-weight: bold;
+    }
+
+    .cancel {
+        color: rgb(147, 19, 19);
+        font-weight: bold;
+    }
+    .back-butn{
+        display:inline-block;
+        background:#5e4e66;
+        color:white;
+        text-decoration:none;
+        padding:10px 18px;
+        border-radius:6px;
+        font-weight:bold;
+        margin-bottom:20px;
+        transition:0.3s;
+    }
+
+    .back-butn:hover{
+        background:#12385b;
+    }
+
+</style>
+<div class="main-content">
+    <h2 class="history-title">All Treks </h2>
+    <!--content-->
+    <div class="content">
+        <div class="top-bar">
+            <h1>Trekking Management Application</h1>
+            <div class="user-name">
+                {{ user.usrname }}
+            </div>
+        </div>
+        <!--div contain trek all history-->
+        <div class="history-box">
+            <h2 class="history-title">All treks</h2>
+            <div class="type-box">
+            <form method="GET">
+                <input type="text"name="location"placeholder="Search by location"value="{{ request.args.get('location','') }}">
+                <select name="difficulty" class="difficulty-select">
+                    <option value="">All Difficulty</option>
+                    <option value="Easy"
+                    {% if request.args.get('difficulty') == "Easy" %}selected{% endif %}>
+                        Easy
+                    </option>
+                    <option value="Moderate"
+                    {% if request.args.get('difficulty') == "Moderate" %}selected{% endif %}>
+                        Moderate
+                    </option>
+                    <option value="Hard"
+                    {% if request.args.get('difficulty') == "Hard" %}selected{% endif %}>
+                        Hard
+                    </option>
+                </select>
+                <button type="submit" class="search-butn">Search</button>
+                <a href="{{ url_for('all_tracks') }}" class="clear-butn">
+                    Clear
+                </a>
+            </form>
+        </div>
+        <!--list of trek in this table-->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trek Name</th>
+                        <th>Location</th>
+                        <th>Difficulty</th>
+                        <th>Duration</th>
+                        <th>Staff</th>
+                        <th>Slots Left</th>
+                        <th>Booking</th>
+                        <th>Trek Status</th>
+                        <th>View Staff</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trek in treks %}
+                    <tr>
+                    <tr>
+                        <td>{{ trek.rout_name }}</td>
+                        <td>{{ trek.destination }}</td>
+                        <td>{{ trek.difficulty_level }}</td>
+                        <td>{{ trek.total_days_are }} Days</td>                                
+                        <td>
+                        {% if trek.staff %}
+                        {{ trek.staff.usrname }}
+                        {% else %}
+                            Not Assigned
+                        {% endif %}
+                        </td>
+                        <td>{{ trek.remening_spots }}</td>
+                        <td>
+                        {% if trek.status_open_close == "Open" %}
+                            <span class="complet">Open</span>
+                        {% else %}
+                            <span class="cancel">Close</span>                        
+                        {% endif %}
+                        </td>
+                        <td>
+                        {% if trek.track_status=="Upcoming" %}
+                            <span class="pending">Upcoming</span>
+                        {% elif trek.track_status=="Ongoing" %}
+                            <span class="complet">Ongoing</span>
+                        {% else %}
+                            <span class="cancel">Completed   
+                        {% endif %}
+                        </td>
+                        <td>
+                        {% if trek.staff %}
+                            <a href="{{ url_for('staff_public_profile', staff_id=trek.staff.usr_ref_id) }}"class="view-butn">View</a>
+                        {% else %}
+                            Not Assigned
+                        {% endif %}
+                    </td>
+                    <td>
+                    {% if trek.adv_rout_id in booked_trek_ids %}
+                        <span class="complet">Booked</span>
+                    {% elif trek.status_open_close == "Open" and trek.remening_spots > 0 %}
+                        <a href="{{ url_for('book_trek', trek_id=trek.adv_rout_id) }}"class="view-butn">Book</a>
+                    {% elif trek.remening_spots <= 0 %}
+                        <span class="cancel">Full</span>
+                    {% else %}
+                        <span class="cancel">Closed</span>
+                    {% endif %}
+                </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br><br>
+            <div style="margin-bottom:20px;">
+                <a href="{{ url_for('user_dashboard') }}" class="back-butn">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

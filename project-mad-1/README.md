@@ -1,0 +1,2 @@
+purpose of creating this app are :
+To design and develop a web-based Adventure Trekking Management System that enables administrators to manage trekking routes, staff members, users, and bookings efficiently. The system also allows users to browse available treks, book trekking adventures, and monitor their booking history, while staff members can manage their assigned trekking activities and profiles.

@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+body{
+    background:#bdb2b2;
+}
+.main-content{
+    display:flex;
+    min-height:100vh;
+}
+/*side bar box*/
+.side-bar{
+    width:240px;
+    background:rgb(91,132,154);
+    padding:20px;
+    border-right:1px solid #000;
+    margin: 10px 10px;
+}
+.side-bar h2{
+    margin-bottom:30px;
+    color:#111827;
+}
+.side-bar-links{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+.side-bar-links a{
+    text-decoration:none;
+    color:#111827;
+    padding:14px;
+    border-radius:8px;
+    font-weight:bold;
+}
+.side-bar-links a:hover{
+    background:#12385b;
+    color:white;
+}
+.active-link{
+    background:#12385b;
+    color:white !important;
+}
+/*main content here*/
+.heading{
+    flex:1;
+    padding:30px;
+    margin: 10px 10px;
+}
+.top-bar{
+    background:rgb(91,132,154);
+    padding:18px 25px;
+    border-radius:10px;
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:25px;
+}
+.top-bar h1{
+    color:#111827;
+}
+.user-name{
+    font-weight:bold;
+}
+/*table*/
+.history-box{
+    background:rgb(91,132,154);
+    padding:25px;
+    border-radius:10px;
+}
+.history-box h2{
+    margin-bottom:20px;
+}
+/*table css*/
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+table thead{
+    background:#28627b;
+    color:white;
+}
+table th{
+    padding:15px;
+    border:1px solid #d2cdcd;
+    text-align:center;
+}
+table td{
+    padding:15px;
+    border:1px solid #ddd;
+    text-align:center;
+}
+.booked{
+    color:green;
+    font-weight:bold;
+}
+.complet{
+    color:rgb(137, 43, 137);
+    font-weight:bold;
+}
+.no-data{
+    text-align:center;
+    font-size:18px;
+    padding:25px;
+}
+</style>
+<div class="main-content">
+    <!--side bar-->
+    <div class="side-bar">
+        <h2>Adventure User</h2>
+        <div class="side-bar-links">
+            <a href="{{ url_for('user_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('my_profile') }}">My profile</a>
+            <a href="{{ url_for('user_booking_table') }}">My Bookings</a>
+            <a href="{{ url_for('all_tracks') }}">All treks</a>
+            <a href="{{ url_for('user_current_tracks') }}">Current Tracks</a>
+            <a href="{{ url_for('user_trek_history') }}"class="active-link">My Trek History</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+    <!--main-->
+    <div class="heading">
+        <div class="top-bar">
+            <h1>Adventrus</h1>
+            <div class="user-name">{{ user.usrname }}</div>
+        </div>
+        <div class="history-box">
+            <h2>My Trek History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trek Name</th>
+                        <th>Location</th>
+                        <th>Difficulty</th>
+                        <th>Staff Name</th>
+                        <th>Total Days</th>
+                        <th>Booking Date</th>
+                        <th>Booking Status</th>
+                        <th>Trek Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if history %}
+                    {% for booking in history %}
+                    <tr>
+                        <td>{{ booking.trek.rout_name }}</td>
+                        <td>{{ booking.trek.destination }}</td>
+                        <td>{{ booking.trek.difficulty_level }}</td>
+                        <td>
+                            {% if booking.trek.staff %}
+                                {{ booking.trek.staff.usrname }}
+                            {% else %}
+                                Not Assigned
+                            {% endif %}
+                        </td>
+                        <td>{{ booking.trek.total_days_are }} Days</td>
+                        <td>{{ booking.reserved_on.strftime('%d %b %Y') }}</td>
+                        <td>
+                            <span class="booked">{{ booking.booking_stat }}</span>
+                        </td>
+                        <td>
+                            <span class="complet">{{ booking.trek.track_status }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="no-data">no complete trek found </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

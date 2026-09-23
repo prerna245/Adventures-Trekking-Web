@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventure Trekking</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial;
+            background-color: #f4f4f4;
+        }
+
+        .nbar {
+            background-color: #0F172A;
+            padding: 15px;
+            text-align: center;
+            margin: 0;
+            padding-left: 0;
+        }
+
+        .nbar li {
+            display: inline;
+            list-style: none;
+        }
+
+        .nbar a {
+            text-decoration: none;
+            color: rgb(207, 199, 199);
+            margin: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .content {
+            min-height: 500px;
+            padding: 0px;
+            text-align: center;
+        }
+
+        .footer{
+            background:#0F172A;
+            color:#F8FAFC;
+            text-align:center;
+            padding:18px;
+            
+        }
+        
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="nbar">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <!--before login-->
+            {% if not session.get('user_id') %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('register') }}">Register</a></li>
+            {% endif %}
+            {% if session.get('user_id') and session.get('role') == 'admin' %} 
+            <li><a href="{{ url_for('manage_staff') }}">Manage Staff</a></li>
+            <li><a href="{{ url_for('manage_users') }}">Manage Users</a></li> 
+            <li><a href="{{ url_for('manage_trek') }}">Manage Treks</a></li> 
+            <li><a href="{{ url_for('logout') }}">Logout</a></li> 
+            {% endif %}
+            {% if session.get('user_id') and session.get('role') == 'staff' %} 
+            <li><a href="{{ url_for('staff_dashboard') }}">Staff Dashboard</a></li> 
+            <li><a href="{{ url_for('logout') }}">Logout</a></li> 
+            {% endif %}
+            {% if session.get('user_id') and session.get('role') == 'user' %} 
+            <li><a href="{{ url_for('my_profile') }}">My profile</a></li>
+            <li><a href="{{ url_for('user_booking_table') }}">My Bookings</a></li>
+            <li><a href="{{ url_for('all_tracks') }}">All treks</a></li>
+            <li><a href="{{ url_for('user_current_tracks') }}">Current Tracks</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <div class="footer">
+        <p>---- 2026 Adventure Trekking Website----</p>
+    </div>
+</body>
+</html>
