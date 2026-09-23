@@ -1,11 +1,12 @@
 from flask import Flask, redirect, render_template, request, url_for,session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime,date
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
-app.secret_key = "my_secret_key"
+app.secret_key = os.environ.get("my_secret_key")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 
@@ -890,4 +891,4 @@ if __name__ == "__main__":
         else:
             print("Admin account exist.") 
 
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
